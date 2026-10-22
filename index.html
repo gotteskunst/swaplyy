@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swaplyy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: { fontFamily: { sans: ['DM Sans', 'sans-serif'] } } }
+        }
+    </script>
+    <style>
+        :root {
+            --bg: #f5f6f8;
+            --bg-secondary: #ffffff;
+            --fg: #0d1117;
+            --fg-muted: #6b7280;
+            --accent: #36255c;
+            --accent-hover: #36255c;
+            --border: #e4e6ea;
+            --card-bg: rgba(255,255,255,0.75);
+            --card-border: rgba(0,0,0,0.055);
+            --nav-bg: rgba(245,246,248,0.88);
+            --tab-active-bg: rgba(37,99,235,0.07);
+            --tab-active-fg: #2563eb;
+            --tab-hover-bg: rgba(0,0,0,0.028);
+            --shadow: 0 1px 2px rgba(0,0,0,0.03), 0 4px 16px rgba(0,0,0,0.04);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,0.07);
+            --orb-a: rgba(54, 37, 92, 0.10);
+            --orb-b: rgba(54, 37, 92, 0.07);
+            --orb-c: rgba(147, 197, 253, 0.06);
+        }
+        .dark {
+            --bg: #080c14;
+            --bg-secondary: #0f1520;
+            --fg: #eef1f6;
+            --fg-muted: #8896a8;
+            --accent: #36255c;
+            --accent-hover: #36255c;
+            --border: #1a2438;
+            --card-bg: rgba(15,21,32,0.75);
+            --card-border: rgba(255,255,255,0.055);
+            --nav-bg: rgba(8,12,20,0.9);
+            --tab-active-bg: rgba(74,144,217,0.1);
+            --tab-active-fg: #6aaee8;
+            --tab-hover-bg: rgba(255,255,255,0.035);
+            --shadow: 0 1px 2px rgba(0,0,0,0.25), 0 4px 16px rgba(0,0,0,0.2);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,0.35);
+            --orb-a: rgba(54, 37, 92, 0.12);
+            --orb-b: rgba(54, 37, 92, 0.07);
+            --orb-c: rgba(30, 60, 120, 0.10);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+        html, body { height: 100%; }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: var(--bg);
+            color: var(--fg);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+        .main-content { flex: 1; }
+        footer { flex-shrink: 0; }
+
+        .wave-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+        .orb { position: absolute; border-radius: 50%; filter: blur(80px); will-change: transform, opacity; }
+        .orb-a { width: 900px; height: 700px; background: radial-gradient(ellipse at center, var(--orb-a) 0%, transparent 65%); top: -200px; left: -150px; animation: orbDrift 28s ease-in-out infinite; }
+        .orb-b { width: 700px; height: 600px; background: radial-gradient(ellipse at center, var(--orb-b) 0%, transparent 65%); bottom: -180px; right: -120px; animation: orbDrift 36s ease-in-out infinite reverse; }
+        .orb-c { width: 500px; height: 400px; background: radial-gradient(ellipse at center, var(--orb-c) 0%, transparent 65%); top: 40%; left: 50%; transform: translate(-50%, -50%); animation: orbFloat 22s ease-in-out infinite; }
+        @keyframes orbDrift { 0% { transform: translate(0px, 0px) scale(1); opacity: 1; } 33% { transform: translate(30px, -20px) scale(1.04); opacity: 0.85; } 66% { transform: translate(-15px, 25px) scale(0.97); opacity: 0.95; } 100% { transform: translate(0px, 0px) scale(1); opacity: 1; } }
+        @keyframes orbFloat { 0% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); } 50% { opacity: 0.9; transform: translate(-50%, -55%) scale(1.06); } 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); } }
+
+        .nav-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 100; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); transition: background 0.4s ease, border-color 0.4s ease; }
+        .nav-inner { max-width: 1440px; margin: 0 auto; padding: 0 24px; height: 60px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+        .logo { font-weight: 700; font-size: 18px; letter-spacing: -0.02em; color: var(--fg); white-space: nowrap; display: flex; align-items: center; gap: 8px; transition: color 0.4s ease; }
+        .logo-mark { width: 28px; height: 28px; background: var(--accent); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 13px; }
+        .nav-tabs { display: flex; align-items: center; gap: 2px; margin-left: 32px; }
+        .nav-tab { padding: 7px 14px; font-size: 13px; font-weight: 500; color: var(--fg-muted); border-radius: 8px; cursor: pointer; transition: color 0.2s ease, background 0.2s ease; white-space: nowrap; border: none; background: none; user-select: none; }
+        .nav-tab:hover { color: var(--fg); }
+        .nav-tab.active { color: #0d1117; }
+        .dark .nav-tab.active { color: #ffffff; }
+        .nav-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+
+        .lang-switcher { position: relative; }
+        .lang-btn { display: flex; align-items: center; justify-content: center; gap: 6px; width: auto; height: 36px; padding: 0 10px; font-size: 18px; color: #0d1117; background: none; border: none; border-radius: 8px; cursor: pointer; transition: color 0.2s ease; }
+        .lang-btn:hover { color: var(--accent); }
+        .flag-icon { font-size: 16px; line-height: 1; border-radius: 3px; overflow: hidden; }
+        .lang-dropdown { position: absolute; top: calc(100% + 6px); right: 0; background: rgba(245,246,248,0.65); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid var(--border); border-radius: 10px; box-shadow: var(--shadow-lg); overflow: hidden; min-width: 160px; opacity: 0; visibility: hidden; transform: translateY(-4px); transition: all 0.2s ease; z-index: 200; }
+        .lang-dropdown.open { opacity: 1; visibility: visible; transform: translateY(0); }
+        .lang-option { display: flex; align-items: center; gap: 12px; padding: 12px 14px; font-size: 14px; font-weight: 400; color: var(--fg); cursor: pointer; transition: background 0.15s ease; }
+        .lang-option:hover { background: var(--tab-hover-bg); }
+        .lang-option.active { color: var(--accent); font-weight: 500; }
+        .lang-option .flag-icon { font-size: 18px; }
+
+        .theme-toggle { width: 36px; height: 36px; border-radius: 8px; border: none; background: none; color: #0d1117; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color 0.2s ease; font-size: 16px; }
+        .theme-toggle:hover { color: var(--accent); }
+        .dark .lang-btn { color: #ffffff; }
+        .dark .theme-toggle { color: #ffffff; }
+
+        .main-content { position: relative; z-index: 1; max-width: 1440px; margin: 0 auto; padding: 96px 24px 60px; }
+        .page-section { display: none; animation: fadeIn 0.35s ease; }
+        .page-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+        .card { background: var(--card-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--card-border); border-radius: 16px; padding: 28px; box-shadow: var(--shadow); transition: box-shadow 0.3s ease; }
+        .card:hover { box-shadow: var(--shadow-lg); }
+
+        .hero-title { font-size: clamp(32px, 5vw, 56px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 16px; }
+        .hero-subtitle { font-size: clamp(15px, 2vw, 18px); color: var(--fg-muted); line-height: 1.6; max-width: 560px; }
+        .hero-accent { color: var(--accent); }
+
+        .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-top: 40px; }
+        .stat-card { text-align: center; padding: 24px 16px; }
+        .stat-value { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; color: var(--fg); }
+        .stat-label { font-size: 12px; font-weight: 500; color: var(--fg-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 6px; }
+
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 40px; }
+        .feature-icon { width: 40px; height: 40px; border-radius: 10px; background: var(--tab-active-bg); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 16px; }
+        .feature-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+        .feature-desc { font-size: 13px; color: var(--fg-muted); line-height: 1.6; }
+
+        .section-header { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
+        .section-desc { font-size: 14px; color: var(--fg-muted); line-height: 1.6; max-width: 600px; margin-bottom: 32px; }
+
+        .data-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+        .data-table thead th { text-align: left; padding: 12px 16px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--fg-muted); border-bottom: 1px solid var(--border); }
+        .data-table tbody td { padding: 14px 16px; font-size: 13px; border-bottom: 1px solid var(--border); color: var(--fg); }
+        .data-table tbody tr:last-child td { border-bottom: none; }
+        .data-table tbody tr { transition: background 0.15s ease; }
+        .data-table tbody tr:hover { background: var(--tab-hover-bg); }
+
+        .badge { display: inline-flex; align-items: center; padding: 3px 10px; font-size: 11px; font-weight: 600; border-radius: 6px; }
+        .badge-green { background: rgba(34,197,94,0.1); color: #16a34a; }
+        .badge-blue { background: var(--tab-active-bg); color: var(--accent); }
+        .badge-amber { background: rgba(245,158,11,0.1); color: #d97706; }
+
+        .vouch-card { display: flex; gap: 14px; align-items: flex-start; }
+        .vouch-avatar-wrap { position: relative; flex-shrink: 0; }
+        .vouch-avatar-img { width: 46px; height: 46px; border-radius: 12px; object-fit: cover; border: 2px solid var(--border); }
+        .vouch-avatar-fallback { width: 46px; height: 46px; border-radius: 12px; background: var(--tab-active-bg); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; border: 2px solid var(--border); }
+        .vouch-name { font-size: 14px; font-weight: 600; }
+        .vouch-date { font-size: 11px; color: var(--fg-muted); margin-top: 2px; }
+        .vouch-text { font-size: 13px; color: var(--fg-muted); line-height: 1.6; margin-top: 6px; }
+        .vouch-stars { display: flex; gap: 2px; margin-top: 5px; color: #f59e0b; font-size: 13px; }
+        .vouch-pair { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 500; margin-top: 6px; background: var(--tab-active-bg); color: var(--accent); padding: 3px 10px; border-radius: 6px; }
+
+        .team-category { margin-bottom: 40px; }
+        .team-category-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+        .team-category-icon { width: 30px; height: 30px; border-radius: 8px; background: var(--tab-active-bg); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+        .team-category-label { font-size: 14px; font-weight: 700; color: var(--fg); flex: 1; text-transform: uppercase; letter-spacing: 0.06em; }
+        .team-category-count { font-size: 11px; font-weight: 700; color: var(--accent); background: var(--tab-active-bg); padding: 2px 8px; border-radius: 6px; }
+        .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+        .team-member-card { background: var(--card-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--card-border); border-radius: 14px; padding: 20px; box-shadow: var(--shadow); transition: box-shadow 0.3s ease; display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .team-member-card:hover { box-shadow: var(--shadow-lg); }
+        .team-member-avatar-wrap { position: relative; margin-bottom: 12px; }
+        .team-member-avatar-img { width: 60px; height: 60px; border-radius: 14px; object-fit: cover; border: 2px solid var(--border); display: block; }
+        .team-member-avatar-fallback { width: 60px; height: 60px; border-radius: 14px; background: var(--tab-active-bg); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; border: 2px solid var(--border); }
+        .team-member-status { position: absolute; bottom: 2px; right: 2px; width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--card-bg); }
+        .team-member-name { font-size: 14px; font-weight: 600; color: var(--fg); }
+        .team-member-role { font-size: 11px; color: var(--fg-muted); margin-top: 3px; }
+
+        .mobile-toggle { display: none; width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border); background: var(--tab-hover-bg); color: var(--fg-muted); cursor: pointer; align-items: center; justify-content: center; font-size: 18px; }
+        .mobile-menu { display: none; position: fixed; top: 60px; left: 0; right: 0; background: var(--nav-bg); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 12px 16px; z-index: 99; flex-direction: column; gap: 2px; }
+        .mobile-menu.open { display: flex; }
+        .mobile-menu .nav-tab { padding: 10px 14px; width: 100%; text-align: left; }
+
+        @media (max-width: 860px) { .nav-tabs { display: none; } .mobile-toggle { display: flex; } }
+        @media (max-width: 640px) { .nav-inner { padding: 0 16px; } .main-content { padding: 80px 16px 40px; } .stats-row { grid-template-columns: repeat(2, 1fr); } }
+
+        .dark .lang-dropdown { background: rgba(8,12,20,0.75); }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--fg-muted); }
+
+        .btn-primary { display: inline-flex; align-items: center; gap: 8px; padding: 10px 22px; font-size: 13px; font-weight: 600; color: #fff; background: var(--accent); border-radius: 10px; border: none; cursor: pointer; transition: background 0.2s ease, box-shadow 0.2s ease; }
+        .btn-primary:hover { background: var(--accent-hover); box-shadow: 0 4px 20px rgba(37,99,235,0.25); }
+        .btn-secondary { display: inline-flex; align-items: center; gap: 8px; padding: 10px 22px; font-size: 13px; font-weight: 600; color: var(--fg); background: var(--tab-hover-bg); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; transition: border-color 0.2s ease, color 0.2s ease; }
+        .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+        .hero-buttons { display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap; }
+
+        .team-avatar { width: 56px; height: 56px; border-radius: 14px; background: var(--tab-active-bg); display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 14px; }
+        .team-name { font-size: 15px; font-weight: 600; }
+        .team-role { font-size: 12px; color: var(--fg-muted); margin-top: 2px; }
+        .team-grid-about { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+
+        .terms-category { background: var(--card-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--card-border); border-radius: 16px; box-shadow: var(--shadow); overflow: hidden; margin-bottom: 16px; transition: box-shadow 0.3s ease; }
+        .terms-category:hover { box-shadow: var(--shadow-lg); }
+        .terms-category-header { display: flex; align-items: center; gap: 10px; padding: 18px 20px; border-bottom: 1px solid var(--border); }
+        .terms-category-icon { width: 32px; height: 32px; border-radius: 8px; background: var(--tab-active-bg); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+        .terms-category-title { font-size: 15px; font-weight: 700; color: var(--fg); flex: 1; }
+        .terms-category-count { display: inline-flex; align-items: center; justify-content: center; min-width: 22px; height: 22px; padding: 0 6px; background: var(--tab-active-bg); color: var(--accent); border-radius: 6px; font-size: 11px; font-weight: 700; }
+        .terms-item { border-bottom: 1px solid var(--border); transition: background 0.15s ease; }
+        .terms-item:last-child { border-bottom: none; }
+        .terms-item-trigger { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 15px 20px; font-size: 13px; font-weight: 500; color: var(--fg); background: none; border: none; cursor: pointer; text-align: left; transition: background 0.15s ease, color 0.15s ease; gap: 12px; }
+        .terms-item-trigger:hover { background: var(--tab-hover-bg); color: var(--accent); }
+        .terms-item-trigger.open { color: var(--accent); background: var(--tab-active-bg); }
+        .terms-chevron { flex-shrink: 0; color: var(--fg-muted); transition: transform 0.25s ease, color 0.15s ease; font-size: 14px; }
+        .terms-item-trigger.open .terms-chevron { transform: rotate(180deg); color: var(--accent); }
+        .terms-item-body { max-height: 0; overflow: hidden; transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+        .terms-item-body.open { max-height: 1000px; }
+        .terms-item-content { padding: 14px 20px 18px 20px; font-size: 13px; color: var(--fg-muted); line-height: 1.8; }
+        .terms-item-content ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+        .terms-item-content ul li { display: flex; gap: 10px; align-items: flex-start; }
+        .terms-item-content ul li::before { content: '→'; color: var(--accent); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+        .terms-item-content p { color: var(--fg-muted); }
+        .terms-item-content strong { color: var(--fg); font-weight: 600; }
+        .terms-sub-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--accent); margin: 12px 0 6px; display: block; }
+
+        .hero-split { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; margin-bottom: 40px; }
+        .hero-left { display: flex; flex-direction: column; align-items: flex-start; }
+        .hero-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .feature-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 0; }
+
+        @media (max-width: 900px) { .hero-split { grid-template-columns: 1fr; gap: 32px; } .hero-stats-grid { grid-template-columns: repeat(4, 1fr); } .feature-grid-3 { grid-template-columns: 1fr; } }
+        @media (max-width: 600px) { .hero-stats-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 900px) { #vouchesContainer { grid-template-columns: repeat(2, 1fr) !important; } }
+        @media (max-width: 580px) { #vouchesContainer { grid-template-columns: 1fr !important; } }
+        @media (max-width: 900px) { #page-fees .fee-grid { grid-template-columns: repeat(2, 1fr) !important; } }
+        @media (max-width: 480px) { #page-fees .fee-grid { grid-template-columns: repeat(1, 1fr) !important; } }
+    </style>
+</head>
+<body>
+
+    <div class="wave-bg">
+        <div class="orb orb-a"></div>
+        <div class="orb orb-b"></div>
+        <div class="orb orb-c"></div>
+    </div>
+
+    <nav class="nav-bar">
+        <div class="nav-inner">
+            <div class="logo"><span>Swaplyy</span></div>
+            <div class="nav-tabs" id="navTabs">
+                <button class="nav-tab active" data-page="home" data-i18n="navHome">Home</button>
+                <button class="nav-tab" data-page="vouches" data-i18n="navVouches">Vouches</button>
+                <button class="nav-tab" data-page="fees" data-i18n="navFees">Fees</button>
+                <button class="nav-tab" data-page="guide" data-i18n="navGuide">Guide</button>
+                <button class="nav-tab" data-page="terms" data-i18n="navTerms">Terms</button>
+                <button class="nav-tab" data-page="about" data-i18n="navAbout">About</button>
+            </div>
+            <div class="nav-right">
+                <div class="lang-switcher" id="langSwitcher">
+                    <button class="lang-btn" id="langBtn">
+                        <iconify-icon icon="lucide:globe"></iconify-icon>
+                    </button>
+                    <div class="lang-dropdown" id="langDropdown">
+                        <div class="lang-option active" data-lang="en"><iconify-icon icon="flag:us-1x1" class="flag-icon"></iconify-icon> English</div>
+                        <div class="lang-option" data-lang="de"><iconify-icon icon="flag:de-1x1" class="flag-icon"></iconify-icon> Deutsch</div>
+                        <div class="lang-option" data-lang="fr"><iconify-icon icon="flag:fr-1x1" class="flag-icon"></iconify-icon> Français</div>
+                        <div class="lang-option" data-lang="es"><iconify-icon icon="flag:es-1x1" class="flag-icon"></iconify-icon> Español</div>
+                        <div class="lang-option" data-lang="ru"><iconify-icon icon="flag:ru-1x1" class="flag-icon"></iconify-icon> Русский</div>
+                    </div>
+                </div>
+                <button class="theme-toggle" id="themeToggle" title="Toggle theme">
+                    <iconify-icon icon="lucide:moon" id="themeIcon"></iconify-icon>
+                </button>
+                <button class="mobile-toggle" id="mobileToggle">
+                    <iconify-icon icon="lucide:menu"></iconify-icon>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="nav-tab active" data-page="home" data-i18n="navHome">Home</button>
+        <button class="nav-tab" data-page="vouches" data-i18n="navVouches">Vouches</button>
+        <button class="nav-tab" data-page="fees" data-i18n="navFees">Fees</button>
+        <button class="nav-tab" data-page="guide" data-i18n="navGuide">Guide</button>
+        <button class="nav-tab" data-page="terms" data-i18n="navTerms">Terms</button>
+        <button class="nav-tab" data-page="about" data-i18n="navAbout">About</button>
+    </div>
+
+    <main class="main-content">
+        <div style="position:relative; z-index:1; max-width:1280px; margin:0 auto; padding:96px 24px 60px;">
+
+        <section class="page-section active" id="page-home">
+            <div style="padding-top: 40px;">
+                <div class="hero-split">
+                    <div class="hero-left">
+                        <h1 class="hero-title" data-i18n="heroTitle">Fast, Secure<br><span class="hero-accent">Digital Exchanges</span></h1>
+                        <p class="hero-subtitle" data-i18n="heroSubtitle">Your trusted partner for seamless cryptocurrency and PayPal transactions. Join our community today.</p>
+                        <div class="hero-buttons">
+                            <button class="btn-primary" onclick="window.open('https://discord.gg/BJcz6gYftj','_blank')" data-i18n="heroCta">Join Discord <iconify-icon icon="lucide:arrow-right"></iconify-icon></button>
+                        </div>
+                    </div>
+                    <div class="hero-stats-grid">
+                        <div class="card stat-card">
+                            <div class="stat-value" id="stat-members">—</div>
+                            <div class="stat-label" data-i18n="statMembers">Members</div>
+                        </div>
+                        <div class="card stat-card">
+                            <div class="stat-value" id="stat-online">—</div>
+                            <div class="stat-label" data-i18n="statOnline">Online</div>
+                        </div>
+                        <div class="card stat-card">
+                            <div class="stat-value" id="stat-vouches">—</div>
+                            <div class="stat-label" data-i18n="statVouches">Total Vouches</div>
+                        </div>
+                        <div class="card stat-card">
+                            <div class="stat-value">&lt;10min</div>
+                            <div class="stat-label" data-i18n="statResponse">Response Time</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feature-grid-3">
+                    <div class="card"><div class="feature-icon"><iconify-icon icon="lucide:zap"></iconify-icon></div><div class="feature-title" data-i18n="feat1Title">Lightning Fast</div><div class="feature-desc" data-i18n="feat1Desc">Instant processing and real time confirmations for all your transactions</div></div>
+                    <div class="card"><div class="feature-icon"><iconify-icon icon="lucide:shield-check"></iconify-icon></div><div class="feature-title" data-i18n="feat2Title">Bank-Level Security</div><div class="feature-desc" data-i18n="feat2Desc">Military-grade encryption protecting every transaction you make</div></div>
+                    <div class="card"><div class="feature-icon"><iconify-icon icon="lucide:headphones"></iconify-icon></div><div class="feature-title" data-i18n="feat4Title">24/7 Support</div><div class="feature-desc" data-i18n="feat4Desc">Round-the-clock assistance from our dedicated support team</div></div>
+                </div>
+
+                <h2 class="section-header" style="margin-top: 60px;" data-i18n="teamTitle">Our Team</h2>
+                <p class="section-desc" data-i18n="teamDesc">Meet the people behind Swaplyy</p>
+                <div id="discordTeamContainer" style="margin-bottom: 40px;">
+                    <div style="text-align:center; padding:40px; color:var(--fg-muted);" data-i18n="loading">Loading team members...</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="page-section" id="page-vouches">
+            <div style="padding-top: 40px;">
+                <h2 class="section-header" data-i18n="vouchesTitle">Trusted by the Community</h2>
+                <p class="section-desc" data-i18n="vouchesDesc">Real feedback from real traders. See what our users have to say about Swaplyy.</p>
+                <div id="vouchesContainer" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:16px;">
+                    <div class="card" style="text-align:center;padding:40px;color:var(--fg-muted)" data-i18n="loading">Loading vouches...</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="page-section" id="page-fees">
+            <div style="padding-top: 40px;">
+                <h2 class="section-header" data-i18n="feesTitle">Fee Structure</h2>
+                <p class="section-desc" data-i18n="feesDesc">Transparent fees for every payment method. No hidden charges.</p>
+
+                <div class="fee-grid" style="display:grid; grid-template-columns: repeat(4, 1fr); gap:16px; margin-bottom:40px;">
+                    <div class="card" style="text-align:center; padding:24px 20px;"><div class="feature-icon" style="margin:0 auto 12px;"><iconify-icon icon="simple-icons:paypal"></iconify-icon></div><div style="font-size:14px; font-weight:600; margin-bottom:4px;">PayPal</div><div style="font-size:22px; font-weight:700; color:var(--accent);">8%</div><div style="font-size:11px; color:var(--fg-muted); margin-top:4px;" data-i18n="feePaypalNote">Friends &amp; Family</div></div>
+                    <div class="card" style="text-align:center; padding:24px 20px;"><div class="feature-icon" style="margin:0 auto 12px;"><iconify-icon icon="lucide:bitcoin"></iconify-icon></div><div style="font-size:14px; font-weight:600; margin-bottom:4px;" data-i18n="feeCryptoLabel">Crypto</div><div style="font-size:22px; font-weight:700; color:var(--accent);">8%</div><div style="font-size:11px; color:var(--fg-muted); margin-top:4px;">BTC, ETH, USDT…</div></div>
+                    <div class="card" style="text-align:center; padding:24px 20px;"><div class="feature-icon" style="margin:0 auto 12px;"><iconify-icon icon="simple-icons:cashapp"></iconify-icon></div><div style="font-size:14px; font-weight:600; margin-bottom:4px;">CashApp</div><div style="font-size:22px; font-weight:700; color:var(--accent);">10%</div><div style="font-size:11px; color:var(--fg-muted); margin-top:4px;" data-i18n="feeUsOnly">US only</div></div>
+                    <div class="card" style="text-align:center; padding:24px 20px;"><div class="feature-icon" style="margin:0 auto 12px;"><iconify-icon icon="simple-icons:revolut"></iconify-icon></div><div style="font-size:14px; font-weight:600; margin-bottom:4px;">Revolut</div><div style="font-size:22px; font-weight:700; color:var(--accent);">10%</div><div style="font-size:11px; color:var(--fg-muted); margin-top:4px;">EUR / GBP</div></div>
+                    <div class="card" style="text-align:center; padding:24px 20px;"><div class="feature-icon" style="margin:0 auto 12px;"><iconify-icon icon="simple-icons:venmo"></iconify-icon></div><div style="font-size:14px; font-weight:600; margin-bottom:4px;">Venmo</div><div style="font-size:22px; font-weight:700; color:var(--accent);">10%</div><div style="font-size:11px; color:var(--fg-muted); margin-top:4px;" data-i18n="feeUsOnly">US only</div></div>
+                    <div class="card" style="text-align:center; padding:24px 20px;"><div class="feature-icon" style="margin:0 auto 12px;"><iconify-icon icon="lucide:landmark"></iconify-icon></div><div style="font-size:14px; font-weight:600; margin-bottom:4px;">Zelle</div><div style="font-size:22px; font-weight:700; color:var(--accent);">10%</div><div style="font-size:11px; color:var(--fg-muted); margin-top:4px;" data-i18n="feeUsOnly">US only</div></div>
+                    <div class="card" style="text-align:center; padding:24px 20px;"><div class="feature-icon" style="margin:0 auto 12px;"><iconify-icon icon="lucide:wallet"></iconify-icon></div><div style="font-size:14px; font-weight:600; margin-bottom:4px;">Skrill</div><div style="font-size:22px; font-weight:700; color:var(--accent);">10%</div><div style="font-size:11px; color:var(--fg-muted); margin-top:4px;" data-i18n="feeEuGlobal">EU / Global</div></div>
+                    <div class="card" style="text-align:center; padding:24px 20px;"><div class="feature-icon" style="margin:0 auto 12px;"><iconify-icon icon="simple-icons:paysafe"></iconify-icon></div><div style="font-size:14px; font-weight:600; margin-bottom:4px;">Paysafe</div><div style="font-size:22px; font-weight:700; color:var(--accent);">20%</div><div style="font-size:11px; color:var(--fg-muted); margin-top:4px;" data-i18n="feePrepaid">Prepaid</div></div>
+                    <div class="card" style="text-align:center; padding:24px 20px;"><div class="feature-icon" style="margin:0 auto 12px;"><iconify-icon icon="simple-icons:amazon"></iconify-icon></div><div style="font-size:14px; font-weight:600; margin-bottom:4px;">Amazon</div><div style="font-size:22px; font-weight:700; color:var(--accent);">35%</div><div style="font-size:11px; color:var(--fg-muted); margin-top:4px;" data-i18n="feeGiftCard">Gift Card</div></div>
+                    <div class="card" style="text-align:center; padding:24px 20px;"><div class="feature-icon" style="margin:0 auto 12px;"><iconify-icon icon="simple-icons:applepay"></iconify-icon></div><div style="font-size:14px; font-weight:600; margin-bottom:4px;">Apple Pay</div><div style="font-size:22px; font-weight:700; color:var(--accent);">25%</div><div style="font-size:11px; color:var(--fg-muted); margin-top:4px;">iOS / Mac</div></div>
+                    <div class="card" style="text-align:center; padding:24px 20px;"><div class="feature-icon" style="margin:0 auto 12px;"><iconify-icon icon="lucide:building-2"></iconify-icon></div><div style="font-size:14px; font-weight:600; margin-bottom:4px;" data-i18n="feeBankLabel">Bank Transfer</div><div style="font-size:22px; font-weight:700; color:var(--accent);">10%</div><div style="font-size:11px; color:var(--fg-muted); margin-top:4px;">SEPA / Wire</div></div>
+                    <div class="card" style="text-align:center; padding:24px 20px;"><div class="feature-icon" style="margin:0 auto 12px;"><iconify-icon icon="lucide:gift"></iconify-icon></div><div style="font-size:14px; font-weight:600; margin-bottom:4px;">Wunschgutschein</div><div style="font-size:22px; font-weight:700; color:var(--accent);">45%</div><div style="font-size:11px; color:var(--fg-muted); margin-top:4px;" data-i18n="feeDeOnly">DE only</div></div>
+                </div>
+
+                <h3 style="font-size:18px; font-weight:700; margin-bottom:8px; letter-spacing:-0.01em;" data-i18n="calcTitle">Fee Calculator</h3>
+                <p style="font-size:13px; color:var(--fg-muted); margin-bottom:20px;" data-i18n="calcDesc">Select what you send and receive, enter the amount — we'll calculate what you get.</p>
+
+                <div class="card" style="max-width:700px;">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+                        <div>
+                            <label style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.07em; color:var(--fg-muted); display:block; margin-bottom:8px;" data-i18n="calcSendLabel">You Send</label>
+                            <select id="calc-send" onchange="calcUpdate()" style="width:100%; padding:10px 12px; font-size:13px; font-weight:500; background:var(--bg); color:var(--fg); border:1px solid var(--border); border-radius:10px; outline:none; cursor:pointer; appearance:none; -webkit-appearance:none;">
+                                <option value="paypal_low">PayPal (5%)</option>
+                                <option value="paypal_high">PayPal (20%)</option>
+                                <option value="crypto_low">Crypto (0%)</option>
+                                <option value="crypto_high">Crypto (3%)</option>
+                                <option value="cashapp">CashApp (10%)</option>
+                                <option value="revolut">Revolut (10%)</option>
+                                <option value="venmo">Venmo (10%)</option>
+                                <option value="zelle">Zelle (10%)</option>
+                                <option value="skrill">Skrill (10%)</option>
+                                <option value="paysafe">Paysafe (20%)</option>
+                                <option value="amazon">Amazon GC (35%)</option>
+                                <option value="applepay">Apple Pay (25%)</option>
+                                <option value="bank">Bank Transfer (10%)</option>
+                                <option value="wunsch">Wunschgutschein (45%)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.07em; color:var(--fg-muted); display:block; margin-bottom:8px;" data-i18n="calcReceiveLabel">You Receive</label>
+                            <select id="calc-receive" onchange="calcUpdate()" style="width:100%; padding:10px 12px; font-size:13px; font-weight:500; background:var(--bg); color:var(--fg); border:1px solid var(--border); border-radius:10px; outline:none; cursor:pointer; appearance:none; -webkit-appearance:none;">
+                                <option value="crypto_low">Crypto (0%)</option>
+                                <option value="crypto_high">Crypto (3%)</option>
+                                <option value="paypal_low">PayPal (5%)</option>
+                                <option value="paypal_high">PayPal (20%)</option>
+                                <option value="cashapp">CashApp (10%)</option>
+                                <option value="revolut">Revolut (10%)</option>
+                                <option value="venmo">Venmo (10%)</option>
+                                <option value="zelle">Zelle (10%)</option>
+                                <option value="skrill">Skrill (10%)</option>
+                                <option value="paysafe">Paysafe (20%)</option>
+                                <option value="amazon">Amazon GC (35%)</option>
+                                <option value="applepay">Apple Pay (25%)</option>
+                                <option value="bank">Bank Transfer (10%)</option>
+                                <option value="wunsch">Wunschgutschein (45%)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="margin-bottom:20px;">
+                        <label style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.07em; color:var(--fg-muted); display:block; margin-bottom:8px;" data-i18n="calcAmountLabel">Amount You Send</label>
+                        <div style="position:relative;">
+                            <span style="position:absolute; left:12px; top:50%; transform:translateY(-50%); font-size:14px; font-weight:600; color:var(--fg-muted);">$</span>
+                            <input id="calc-amount" type="number" min="0" step="0.01" placeholder="100.00" oninput="calcUpdate()" style="width:100%; padding:10px 12px 10px 28px; font-size:15px; font-weight:600; background:var(--bg); color:var(--fg); border:1px solid var(--border); border-radius:10px; outline:none;" />
+                        </div>
+                    </div>
+                    <div id="calc-result" style="background:var(--tab-active-bg); border-radius:12px; padding:20px; display:none;">
+                        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; text-align:center;">
+                            <div>
+                                <div style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.07em; color:var(--fg-muted); margin-bottom:6px;" data-i18n="calcSendLabel">You Send</div>
+                                <div id="res-send" style="font-size:20px; font-weight:700; color:var(--fg);">—</div>
+                            </div>
+                            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                                <div style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.07em; color:var(--fg-muted); margin-bottom:6px;" data-i18n="calcTotalFee">Total Fee</div>
+                                <div id="res-fee" style="font-size:20px; font-weight:700; color:#ef4444;">—</div>
+                            </div>
+                            <div>
+                                <div style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.07em; color:var(--fg-muted); margin-bottom:6px;" data-i18n="calcReceiveLabel">You Receive</div>
+                                <div id="res-receive" style="font-size:20px; font-weight:700; color:#22c55e;">—</div>
+                            </div>
+                        </div>
+                        <div id="res-breakdown" style="margin-top:14px; padding-top:14px; border-top:1px solid var(--border); font-size:12px; color:var(--fg-muted); line-height:1.8;"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="page-section" id="page-guide">
+            <div style="padding-top: 40px;">
+                <h2 class="section-header" data-i18n="guideTitle">Getting Started Guide</h2>
+                <p class="section-desc" data-i18n="guideDesc">Follow these simple steps to start trading on Swaplyy in under 5 minutes.</p>
+                <div style="display:flex; flex-direction:column; gap:20px;">
+                    <div class="card" style="display:flex; gap:20px; align-items:flex-start;">
+                        <div style="width:44px; height:44px; border-radius:12px; background:var(--tab-active-bg); color:var(--accent); display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:700; flex-shrink:0;">1</div>
+                        <div><div style="font-size:15px; font-weight:600; margin-bottom:6px;" data-i18n="step1Title">Join Discord</div><div style="font-size:13px; color:var(--fg-muted); line-height:1.7;" data-i18n="step1Desc">Join our Discord server to get access to the Swaplyy community and all exchange channels.</div></div>
+                    </div>
+                    <div class="card" style="display:flex; gap:20px; align-items:flex-start;">
+                        <div style="width:44px; height:44px; border-radius:12px; background:var(--tab-active-bg); color:var(--accent); display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:700; flex-shrink:0;">2</div>
+                        <div><div style="font-size:15px; font-weight:600; margin-bottom:6px;" data-i18n="step2Title">Verify</div><div style="font-size:13px; color:var(--fg-muted); line-height:1.7;" data-i18n="step2Desc">Complete the verification process in our Discord server to unlock access to all exchange features.</div></div>
+                    </div>
+                    <div class="card" style="display:flex; gap:20px; align-items:flex-start;">
+                        <div style="width:44px; height:44px; border-radius:12px; background:var(--tab-active-bg); color:var(--accent); display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:700; flex-shrink:0;">3</div>
+                        <div><div style="font-size:15px; font-weight:600; margin-bottom:6px;" data-i18n="step3Title">Create Exchange Ticket</div><div style="font-size:13px; color:var(--fg-muted); line-height:1.7;" data-i18n="step3Desc">Open an official exchange ticket, tell us what you want to send and receive, and wait for a staff member to confirm.</div></div>
+                    </div>
+                    <div class="card" style="display:flex; gap:20px; align-items:flex-start;">
+                        <div style="width:44px; height:44px; border-radius:12px; background:var(--tab-active-bg); color:var(--accent); display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:700; flex-shrink:0;">4</div>
+                        <div><div style="font-size:15px; font-weight:600; margin-bottom:6px;" data-i18n="step4Title">Have Fun</div><div style="font-size:13px; color:var(--fg-muted); line-height:1.7;" data-i18n="step4Desc">Enjoy fast, secure exchanges with our trusted team. Come back anytime — we're always here for you.</div></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="page-section" id="page-terms">
+            <div style="padding-top: 40px;">
+                <h2 class="section-header" data-i18n="termsTitle">Terms of Service</h2>
+                <p class="section-desc" data-i18n="termsDesc">Last updated: April 2026. Please read these terms carefully before using Swaplyy.</p>
+
+                <div class="terms-category">
+                    <div class="terms-category-header">
+                        <div class="terms-category-icon"><iconify-icon icon="lucide:shield"></iconify-icon></div>
+                        <span class="terms-category-title" data-i18n="termsCatGeneral">General</span>
+                        <span class="terms-category-count">2</span>
+                    </div>
+                    <div class="terms-item">
+                        <button class="terms-item-trigger" onclick="toggleAccordion(this)">
+                            <span data-i18n="termsSafetyTitle">Safety First</span>
+                            <iconify-icon icon="lucide:chevron-down" class="terms-chevron"></iconify-icon>
+                        </button>
+                        <div class="terms-item-body">
+                            <div class="terms-item-content"><p data-i18n="termsSafetyDesc">Keeping you safe is our top priority. We have strict rules to make sure trading here is secure and trustworthy.</p></div>
+                        </div>
+                    </div>
+                    <div class="terms-item">
+                        <button class="terms-item-trigger" onclick="toggleAccordion(this)">
+                            <span data-i18n="termsZeroToleranceTitle">Zero Tolerance for Fraud</span>
+                            <iconify-icon icon="lucide:chevron-down" class="terms-chevron"></iconify-icon>
+                        </button>
+                        <div class="terms-item-body">
+                            <div class="terms-item-content">
+                                <ul>
+                                    <li data-i18n="termsZeroTol1">Swaplyy follows the law. We don't accept stolen money or funds from illegal activity.</li>
+                                    <li data-i18n="termsZeroTol2">If we think your money comes from fraud, we can freeze or take it.</li>
+                                    <li data-i18n="termsZeroTol3">If it turns out to be dirty money, you won't see it again.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="terms-category">
+                    <div class="terms-category-header">
+                        <div class="terms-category-icon"><iconify-icon icon="lucide:credit-card"></iconify-icon></div>
+                        <span class="terms-category-title" data-i18n="termsCatPayment">Payment Methods</span>
+                        <span class="terms-category-count">4</span>
+                    </div>
+                    <div class="terms-item">
+                        <button class="terms-item-trigger" onclick="toggleAccordion(this)">
+                            <span data-i18n="termsPaypalTitle">PayPal</span>
+                            <iconify-icon icon="lucide:chevron-down" class="terms-chevron"></iconify-icon>
+                        </button>
+                        <div class="terms-item-body">
+                            <div class="terms-item-content">
+                                <ul>
+                                    <li data-i18n="termsPaypal1">Friends &amp; Family only — Don't send as Goods &amp; Services.</li>
+                                    <li data-i18n="termsPaypal2">Don't write anything in the payment note. You pay any PayPal fees.</li>
+                                    <li data-i18n="termsPaypal3">If you choose PayPal Balance, you must pay from your PayPal balance.</li>
+                                    <li data-i18n="termsPaypal4">If you choose PayPal Bank / Card, you must pay from a linked bank account or card.</li>
+                                    <li data-i18n="termsPaypal5">If you open a dispute or chargeback, you're banned.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="terms-item">
+                        <button class="terms-item-trigger" onclick="toggleAccordion(this)">
+                            <span data-i18n="termsCryptoTitle">Cryptocurrency</span>
+                            <iconify-icon icon="lucide:chevron-down" class="terms-chevron"></iconify-icon>
+                        </button>
+                        <div class="terms-item-body">
+                            <div class="terms-item-content">
+                                <ul>
+                                    <li data-i18n="termsCrypto1">Send to the right wallet address on the right network.</li>
+                                    <li data-i18n="termsCrypto2">You pay the network fees. If you send to the wrong address or network, that money is gone.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="terms-item">
+                        <button class="terms-item-trigger" onclick="toggleAccordion(this)">
+                            <span data-i18n="termsBankTitle">Bank Transfer</span>
+                            <iconify-icon icon="lucide:chevron-down" class="terms-chevron"></iconify-icon>
+                        </button>
+                        <div class="terms-item-body">
+                            <div class="terms-item-content">
+                                <ul>
+                                    <li data-i18n="termsBank1">Send to the bank details the exchanger gives you.</li>
+                                    <li data-i18n="termsBank2">You pay any bank fees. Don't add a payment message unless the exchanger tells you to.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="terms-item">
+                        <button class="terms-item-trigger" onclick="toggleAccordion(this)">
+                            <span data-i18n="termsGiftCardsTitle">Gift Cards</span>
+                            <iconify-icon icon="lucide:chevron-down" class="terms-chevron"></iconify-icon>
+                        </button>
+                        <div class="terms-item-body">
+                            <div class="terms-item-content">
+                                <ul>
+                                    <li data-i18n="termsGiftCards1">Only valid, unused codes are accepted. The code must be easy to read.</li>
+                                    <li data-i18n="termsGiftCards2">If your code is already used, invalid, or only partly loaded — that's on you. We don't accept codes from other sellers.</li>
+                                    <li data-i18n="termsGiftCards3">Exchangers record themselves when using your code as proof.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="terms-category">
+                    <div class="terms-category-header">
+                        <div class="terms-category-icon"><iconify-icon icon="lucide:arrow-left-right"></iconify-icon></div>
+                        <span class="terms-category-title" data-i18n="termsCatTransactions">Transactions</span>
+                        <span class="terms-category-count">3</span>
+                    </div>
+                    <div class="terms-item">
+                        <button class="terms-item-trigger" onclick="toggleAccordion(this)">
+                            <span data-i18n="termsExchangeRatesTitle">Exchange Rates</span>
+                            <iconify-icon icon="lucide:chevron-down" class="terms-chevron"></iconify-icon>
+                        </button>
+                        <div class="terms-item-body">
+                            <div class="terms-item-content"><p data-i18n="termsExchangeRatesDesc">Our rates are fixed. Don't try to haggle — it might get you banned.</p></div>
+                        </div>
+                    </div>
+                    <div class="terms-item">
+                        <button class="terms-item-trigger" onclick="toggleAccordion(this)">
+                            <span data-i18n="termsDealAmountsTitle">Deal Amounts</span>
+                            <iconify-icon icon="lucide:chevron-down" class="terms-chevron"></iconify-icon>
+                        </button>
+                        <div class="terms-item-body">
+                            <div class="terms-item-content">
+                                <ul><li data-i18n="termsDealAmounts1">You must always send the exact agreed amount.</li></ul>
+                                <span class="terms-sub-label" data-i18n="termsDealAmountsSubtitle">Changing the amount:</span>
+                                <ul>
+                                    <li data-i18n="termsDealAmounts3">If you want to send a different amount, tell the exchanger before sending.</li>
+                                    <li data-i18n="termsDealAmounts4">Wait for the exchanger to confirm the new amount.</li>
+                                    <li data-i18n="termsDealAmounts5">Only send after you get confirmation.</li>
+                                </ul>
+                                <span class="terms-sub-label" data-i18n="termsDealAmountsWrongSubtitle">Wrong amounts:</span>
+                                <ul>
+                                    <li data-i18n="termsDealAmounts7">Sent too much: Only the agreed amount will be exchanged. What happens to the extra is up to the exchanger. For tickets: extra money counts as a tip.</li>
+                                    <li data-i18n="termsDealAmounts8">Sent too little: The deal will still go through, but fees will be doubled.</li>
+                                    <li data-i18n="termsDealAmounts9">If you send the wrong amount without telling us first, it's on you.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="terms-item">
+                        <button class="terms-item-trigger" onclick="toggleAccordion(this)">
+                            <span data-i18n="termsOfficialTicketsTitle">Official Tickets Only</span>
+                            <iconify-icon icon="lucide:chevron-down" class="terms-chevron"></iconify-icon>
+                        </button>
+                        <div class="terms-item-body">
+                            <div class="terms-item-content">
+                                <ul>
+                                    <li data-i18n="termsOfficialTickets1">All deals happen in official tickets only. If you make a deal in DMs, we can't help if something goes wrong.</li>
+                                    <li data-i18n="termsOfficialTickets2">Always wait for staff to confirm before you send money. We're not responsible for unclaimed tickets or payments we didn't confirm.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="terms-category">
+                    <div class="terms-category-header">
+                        <div class="terms-category-icon"><iconify-icon icon="lucide:scale"></iconify-icon></div>
+                        <span class="terms-category-title" data-i18n="termsCatLiability">Liability</span>
+                        <span class="terms-category-count">2</span>
+                    </div>
+                    <div class="terms-item">
+                        <button class="terms-item-trigger" onclick="toggleAccordion(this)">
+                            <span data-i18n="termsAccountIssuesTitle">Account Issues</span>
+                            <iconify-icon icon="lucide:chevron-down" class="terms-chevron"></iconify-icon>
+                        </button>
+                        <div class="terms-item-body">
+                            <div class="terms-item-content">
+                                <ul>
+                                    <li data-i18n="termsAccountIssues1">If your account gets closed during a deal, you need to prove it was really yours (like a screen recording).</li>
+                                    <li data-i18n="termsAccountIssues2">If the exchanger's payment method gets locked, you'll have to wait until it's unlocked before anything can happen.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="terms-item">
+                        <button class="terms-item-trigger" onclick="toggleAccordion(this)">
+                            <span data-i18n="termsNotResponsibleTitle">Not Our Responsibility</span>
+                            <iconify-icon icon="lucide:chevron-down" class="terms-chevron"></iconify-icon>
+                        </button>
+                        <div class="terms-item-body">
+                            <div class="terms-item-content">
+                                <ul>
+                                    <li data-i18n="termsNotResponsible1">Money you lose from trading or bad rates.</li>
+                                    <li data-i18n="termsNotResponsible2">Your account getting locked by PayPal, banks, etc.</li>
+                                    <li data-i18n="termsNotResponsible3">Deals made outside official tickets.</li>
+                                    <li data-i18n="termsNotResponsible4">You sending to the wrong address.</li>
+                                    <li data-i18n="termsNotResponsible5">Losing access to your accounts or wallets after a deal.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="page-section" id="page-about">
+            <div style="padding-top: 40px;">
+                <h2 class="section-header" data-i18n="aboutTitle">About Swaplyy</h2>
+                <p class="section-desc" data-i18n="aboutDesc">Your trusted partner for seamless cryptocurrency and PayPal transactions. Join our community today.</p>
+                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-bottom:40px;">
+                    <div class="card" style="text-align:center;">
+                        <div style="font-size:28px; font-weight:700; color:var(--accent);">2026</div>
+                        <div style="font-size:12px; color:var(--fg-muted); margin-top:4px;" data-i18n="aboutFounded">Founded</div>
+                    </div>
+                    <div class="card" style="text-align:center;">
+                        <div style="font-size:28px; font-weight:700; color:var(--accent);" id="about-team-count">—</div>
+                        <div style="font-size:12px; color:var(--fg-muted); margin-top:4px;" data-i18n="aboutTeam">Team Members</div>
+                    </div>
+                </div>
+                <h3 style="font-size:18px; font-weight:600; margin-bottom:20px;" data-i18n="aboutTeamTitle">Leadership Team</h3>
+                <div id="aboutLeadershipGrid" class="team-grid-about">
+                    <div style="text-align:center; padding:40px; color:var(--fg-muted); grid-column:1/-1;" data-i18n="loading">Loading...</div>
+                </div>
+            </div>
+        </section>
+
+        </div>
+    </main>
+
+    <footer style="position:relative; z-index:1; border-top:1px solid var(--border); transition:border-color 0.4s ease;">
+        <div style="max-width:1280px; margin:0 auto; padding:24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+            <div style="font-size:12px; color:var(--fg-muted);" data-i18n="footerCopy">© 2026 Swaplyy. All rights reserved.</div>
+            <div style="display:flex; gap:16px;">
+                <a href="https://github.com/zyroxts" style="color:var(--fg-muted); transition:color 0.2s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--fg-muted)'"><iconify-icon icon="lucide:github" style="font-size:16px;"></iconify-icon></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    function toggleAccordion(trigger) {
+        const body = trigger.nextElementSibling;
+        const isOpen = trigger.classList.contains('open');
+        trigger.classList.toggle('open', !isOpen);
+        body.classList.toggle('open', !isOpen);
+    }
+
+    const translations = {
+        en: {
+            navHome: 'Home', navVouches: 'Vouches', navFees: 'Fees',
+            navGuide: 'Guide', navTerms: 'Terms', navAbout: 'About',
+            heroTitle: 'Fast, Secure<br><span class="hero-accent">Digital Exchanges</span>',
+            heroSubtitle: 'Your trusted partner for seamless cryptocurrency and PayPal transactions. Join our community today.',
+            heroCta: 'Join Discord',
+            statMembers: 'Members', statOnline: 'Online',
+            statVouches: 'Total Vouches', statResponse: 'Response Time',
+            feat1Title: 'Lightning Fast',
+            feat1Desc: 'Instant processing and real-time confirmations for all your transactions.',
+            feat2Title: 'Bank-Level Security',
+            feat2Desc: 'Military-grade encryption protecting every transaction you make.',
+            feat4Title: '24/7 Support',
+            feat4Desc: 'Round-the-clock assistance from our dedicated support team.',
+            teamTitle: 'Our Team', teamDesc: 'Meet the people behind Swaplyy',
+            vouchesTitle: 'Trusted by the Community',
+            vouchesDesc: 'Real feedback from real traders. See what our users have to say about Swaplyy.',
+            feesTitle: 'Fee Structure',
+            feesDesc: 'Transparent fees for every payment method. No hidden charges.',
+            feePaypalNote: 'Friends & Family',
+            feeCryptoLabel: 'Crypto',
+            feeUsOnly: 'US only',
+            feeEuGlobal: 'EU / Global',
+            feePrepaid: 'Prepaid',
+            feeGiftCard: 'Gift Card',
+            feeBankLabel: 'Bank Transfer',
+            feeDeOnly: 'DE only',
+            calcTitle: 'Fee Calculator',
+            calcDesc: "Select what you send and receive, enter the amount — we'll calculate what you get.",
+            calcSendLabel: 'You Send',
+            calcReceiveLabel: 'You Receive',
+            calcAmountLabel: 'Amount You Send',
+            calcTotalFee: 'Total Fee',
+            guideTitle: 'Getting Started Guide',
+            guideDesc: 'Follow these simple steps to start trading on Swaplyy in under 5 minutes.',
+            step1Title: 'Join Discord',
+            step1Desc: 'Join our Discord server to get access to the Swaplyy community and all exchange channels.',
+            step2Title: 'Verify',
+            step2Desc: 'Complete the verification process in our Discord server to unlock access to all exchange features.',
+            step3Title: 'Create Exchange Ticket',
+            step3Desc: 'Open an official exchange ticket, tell us what you want to send and receive, and wait for a staff member to confirm.',
+            step4Title: 'Have Fun',
+            step4Desc: "Enjoy fast, secure exchanges with our trusted team. Come back anytime — we're always here for you.",
+            termsTitle: 'Terms of Service',
+            termsDesc: 'Last updated: April 2026. Please read these terms carefully before using Swaplyy.',
+            termsCatGeneral: 'General', termsCatPayment: 'Payment Methods',
+            termsCatTransactions: 'Transactions', termsCatLiability: 'Liability',
+            termsSafetyTitle: 'Safety First',
+            termsSafetyDesc: 'Keeping you safe is our top priority. We have strict rules to make sure trading here is secure and trustworthy.',
+            termsZeroToleranceTitle: 'Zero Tolerance for Fraud',
+            termsZeroTol1: "Swaplyy follows the law. We don't accept stolen money or funds from illegal activity.",
+            termsZeroTol2: 'If we think your money comes from fraud, we can freeze or take it.',
+            termsZeroTol3: "If it turns out to be dirty money, you won't see it again.",
+            termsPaypalTitle: 'PayPal',
+            termsPaypal1: "Friends & Family only — Don't send as Goods & Services.",
+            termsPaypal2: "Don't write anything in the payment note. You pay any PayPal fees.",
+            termsPaypal3: 'If you choose PayPal Balance, you must pay from your PayPal balance.',
+            termsPaypal4: 'If you choose PayPal Bank / Card, you must pay from a linked bank account or card.',
+            termsPaypal5: "If you open a dispute or chargeback, you're banned.",
+            termsCryptoTitle: 'Cryptocurrency',
+            termsCrypto1: 'Send to the right wallet address on the right network.',
+            termsCrypto2: 'You pay the network fees. If you send to the wrong address or network, that money is gone.',
+            termsBankTitle: 'Bank Transfer',
+            termsBank1: 'Send to the bank details the exchanger gives you.',
+            termsBank2: "You pay any bank fees. Don't add a payment message unless the exchanger tells you to.",
+            termsGiftCardsTitle: 'Gift Cards',
+            termsGiftCards1: 'Only valid, unused codes are accepted. The code must be easy to read.',
+            termsGiftCards2: "If your code is already used, invalid, or only partly loaded — that's on you. We don't accept codes from other sellers.",
+            termsGiftCards3: 'Exchangers record themselves when using your code as proof.',
+            termsExchangeRatesTitle: 'Exchange Rates',
+            termsExchangeRatesDesc: "Our rates are fixed. Don't try to haggle — it might get you banned.",
+            termsDealAmountsTitle: 'Deal Amounts',
+            termsDealAmounts1: 'You must always send the exact agreed amount.',
+            termsDealAmountsSubtitle: 'Changing the amount:',
+            termsDealAmounts3: 'If you want to send a different amount, tell the exchanger before sending.',
+            termsDealAmounts4: 'Wait for the exchanger to confirm the new amount.',
+            termsDealAmounts5: 'Only send after you get confirmation.',
+            termsDealAmountsWrongSubtitle: 'Wrong amounts:',
+            termsDealAmounts7: 'Sent too much: Only the agreed amount will be exchanged. What happens to the extra is up to the exchanger. For tickets: extra money counts as a tip.',
+            termsDealAmounts8: 'Sent too little: The deal will still go through, but fees will be doubled.',
+            termsDealAmounts9: "If you send the wrong amount without telling us first, it's on you.",
+            termsOfficialTicketsTitle: 'Official Tickets Only',
+            termsOfficialTickets1: "All deals happen in official tickets only. If you make a deal in DMs, we can't help if something goes wrong.",
+            termsOfficialTickets2: "Always wait for staff to confirm before you send money. We're not responsible for unclaimed tickets or payments we didn't confirm.",
+            termsAccountIssuesTitle: 'Account Issues',
+            termsAccountIssues1: 'If your account gets closed during a deal, you need to prove it was really yours (like a screen recording).',
+            termsAccountIssues2: "If the exchanger's payment method gets locked, you'll have to wait until it's unlocked before anything can happen.",
+            termsNotResponsibleTitle: 'Not Our Responsibility',
+            termsNotResponsible1: 'Money you lose from trading or bad rates.',
+            termsNotResponsible2: 'Your account getting locked by PayPal, banks, etc.',
+            termsNotResponsible3: 'Deals made outside official tickets.',
+            termsNotResponsible4: 'You sending to the wrong address.',
+            termsNotResponsible5: 'Losing access to your accounts or wallets after a deal.',
+            aboutTitle: 'About Swaplyy',
+            aboutDesc: "Your trusted partner for seamless cryptocurrency and PayPal transactions. Join our community today.",
+            aboutFounded: 'Founded', aboutTeam: 'Team Members',
+            aboutTeamTitle: 'Leadership Team',
+            loading: 'Loading...',
+            footerCopy: '© 2026 Swaplyy. All rights reserved.'
+        },
+
+        de: {
+            navHome: 'Start', navVouches: 'Bewertungen', navFees: 'Gebühren',
+            navGuide: 'Anleitung', navTerms: 'AGB', navAbout: 'Über uns',
+            heroTitle: 'Schnelle, sichere<br><span class="hero-accent">digitale Exchanges</span>',
+            heroSubtitle: 'Dein vertrauenswürdiger Partner für reibungslose Kryptowährungs- und PayPal-Transaktionen. Tritt noch heute unserer Community bei.',
+            heroCta: 'Discord beitreten',
+            statMembers: 'Mitglieder', statOnline: 'Online',
+            statVouches: 'Bewertungen gesamt', statResponse: 'Antwortzeit',
+            feat1Title: 'Blitzschnell',
+            feat1Desc: 'Sofortige Verarbeitung und Echtzeit-Bestätigungen für alle deine Transaktionen.',
+            feat2Title: 'Banksicherheit',
+            feat2Desc: 'Militärtaugliche Verschlüsselung schützt jede deiner Transaktionen.',
+            feat4Title: '24/7 Support',
+            feat4Desc: 'Rund-um-die-Uhr-Unterstützung durch unser engagiertes Support-Team.',
+            teamTitle: 'Unser Team', teamDesc: 'Die Menschen hinter Swaplyy',
+            vouchesTitle: 'Von der Community vertraut',
+            vouchesDesc: 'Echtes Feedback von echten Tradern. Erfahre, was unsere Nutzer über Swaplyy sagen.',
+            feesTitle: 'Gebührenübersicht',
+            feesDesc: 'Transparente Gebühren für jede Zahlungsmethode. Keine versteckten Kosten.',
+            feePaypalNote: 'Freunde & Familie',
+            feeCryptoLabel: 'Krypto',
+            feeUsOnly: 'Nur USA',
+            feeEuGlobal: 'EU / Weltweit',
+            feePrepaid: 'Prepaid',
+            feeGiftCard: 'Geschenkkarte',
+            feeBankLabel: 'Banküberweisung',
+            feeDeOnly: 'Nur DE',
+            calcTitle: 'Gebührenrechner',
+            calcDesc: 'Wähle was du sendest und empfängst, gib den Betrag ein — wir rechnen das Ergebnis aus.',
+            calcSendLabel: 'Du sendest',
+            calcReceiveLabel: 'Du erhältst',
+            calcAmountLabel: 'Betrag den du sendest',
+            calcTotalFee: 'Gesamtgebühr',
+            guideTitle: 'Einsteiger-Anleitung',
+            guideDesc: 'Folge diesen einfachen Schritten und starte in unter 5 Minuten mit dem Tauschen.',
+            step1Title: 'Discord beitreten',
+            step1Desc: 'Tritt unserem Discord-Server bei, um Zugang zur Swaplyy-Community und allen Exchange-Kanälen zu erhalten.',
+            step2Title: 'Verifizieren',
+            step2Desc: 'Schließe den Verifizierungsprozess in unserem Discord-Server ab, um Zugang zu allen Exchange-Funktionen zu erhalten.',
+            step3Title: 'Exchange-Ticket erstellen',
+            step3Desc: 'Öffne ein offizielles Exchange-Ticket, teile uns mit, was du senden und empfangen möchtest, und warte auf die Bestätigung eines Mitarbeiters.',
+            step4Title: 'Viel Spaß',
+            step4Desc: 'Genieße schnelle, sichere Exchanges mit unserem vertrauenswürdigen Team. Komm jederzeit wieder — wir sind immer für dich da.',
+            termsTitle: 'Nutzungsbedingungen',
+            termsDesc: 'Zuletzt aktualisiert: April 2026. Bitte lies diese Bedingungen sorgfältig durch, bevor du Swaplyy nutzt.',
+            termsCatGeneral: 'Allgemein', termsCatPayment: 'Zahlungsmethoden',
+            termsCatTransactions: 'Transaktionen', termsCatLiability: 'Haftung',
+            termsSafetyTitle: 'Sicherheit zuerst',
+            termsSafetyDesc: 'Deine Sicherheit hat oberste Priorität. Wir haben strenge Regeln, um sicherzustellen, dass der Handel hier sicher und vertrauenswürdig ist.',
+            termsZeroToleranceTitle: 'Null-Toleranz gegenüber Betrug',
+            termsZeroTol1: 'Swaplyy hält sich an das Gesetz. Wir akzeptieren kein gestohlenes Geld oder Gelder aus illegalen Aktivitäten.',
+            termsZeroTol2: 'Wenn wir vermuten, dass dein Geld aus Betrug stammt, können wir es einfrieren oder einbehalten.',
+            termsZeroTol3: 'Stellt sich heraus, dass es sich um Schwarzgeld handelt, wirst du es nicht wiedersehen.',
+            termsPaypalTitle: 'PayPal',
+            termsPaypal1: 'Nur Freunde & Familie — Nicht als Waren & Dienstleistungen senden.',
+            termsPaypal2: 'Schreibe nichts in die Zahlungsnotiz. Du trägst etwaige PayPal-Gebühren.',
+            termsPaypal3: 'Bei Wahl von PayPal-Guthaben musst du vom PayPal-Guthaben zahlen.',
+            termsPaypal4: 'Bei Wahl von PayPal Bank/Karte musst du von einem verknüpften Bankkonto oder einer Karte zahlen.',
+            termsPaypal5: 'Wenn du einen Streitfall oder eine Rückbuchung einleitest, wirst du gebannt.',
+            termsCryptoTitle: 'Kryptowährung',
+            termsCrypto1: 'Sende an die richtige Wallet-Adresse im richtigen Netzwerk.',
+            termsCrypto2: 'Du trägst die Netzwerkgebühren. Wenn du an die falsche Adresse oder das falsche Netzwerk sendest, ist das Geld weg.',
+            termsBankTitle: 'Banküberweisung',
+            termsBank1: 'Sende an die Bankdaten, die dir der Exchanger mitteilt.',
+            termsBank2: 'Du trägst etwaige Bankgebühren. Füge keine Zahlungsnotiz hinzu, es sei denn, der Exchanger weist dich ausdrücklich dazu an.',
+            termsGiftCardsTitle: 'Geschenkkarten',
+            termsGiftCards1: 'Es werden nur gültige, unbenutzte Codes akzeptiert. Der Code muss gut lesbar sein.',
+            termsGiftCards2: 'Wenn dein Code bereits eingelöst, ungültig oder nur teilweise aufgeladen ist, liegt das in deiner Verantwortung. Wir akzeptieren keine Codes von anderen Verkäufern.',
+            termsGiftCards3: 'Exchanger zeichnen sich bei der Code-Einlösung als Nachweis auf.',
+            termsExchangeRatesTitle: 'Wechselkurse',
+            termsExchangeRatesDesc: 'Unsere Kurse sind fest. Versuche nicht zu verhandeln — das kann zu einem Bann führen.',
+            termsDealAmountsTitle: 'Dealbeträge',
+            termsDealAmounts1: 'Du musst immer genau den vereinbarten Betrag senden.',
+            termsDealAmountsSubtitle: 'Betrag ändern:',
+            termsDealAmounts3: 'Wenn du einen anderen Betrag senden möchtest, teile dem Exchanger dies vor dem Senden mit.',
+            termsDealAmounts4: 'Warte auf die Bestätigung des neuen Betrags durch den Exchanger.',
+            termsDealAmounts5: 'Sende erst nach Erhalt der Bestätigung.',
+            termsDealAmountsWrongSubtitle: 'Falsche Beträge:',
+            termsDealAmounts7: 'Zu viel gesendet: Nur der vereinbarte Betrag wird getauscht. Was mit dem Überschuss passiert, liegt beim Exchanger. Bei Tickets gilt: Überschüsse zählen als Trinkgeld.',
+            termsDealAmounts8: 'Zu wenig gesendet: Der Deal wird trotzdem abgewickelt, aber die Gebühren werden verdoppelt.',
+            termsDealAmounts9: 'Wenn du ohne vorherige Absprache den falschen Betrag sendest, liegt das in deiner Verantwortung.',
+            termsOfficialTicketsTitle: 'Nur offizielle Tickets',
+            termsOfficialTickets1: 'Alle Deals finden ausschließlich in offiziellen Tickets statt. Wenn du einen Deal per DM abschließt, können wir nicht helfen, wenn etwas schiefläuft.',
+            termsOfficialTickets2: 'Warte immer auf die Bestätigung des Personals, bevor du Geld sendest. Wir übernehmen keine Verantwortung für nicht beanspruchte Tickets oder Zahlungen, die wir nicht bestätigt haben.',
+            termsAccountIssuesTitle: 'Kontoprobleme',
+            termsAccountIssues1: 'Wenn dein Konto während eines Deals geschlossen wird, musst du nachweisen, dass es wirklich deins war (z. B. per Bildschirmaufnahme).',
+            termsAccountIssues2: 'Wenn die Zahlungsmethode des Exchangers gesperrt wird, musst du warten, bis sie wieder freigegeben ist.',
+            termsNotResponsibleTitle: 'Nicht unsere Verantwortung',
+            termsNotResponsible1: 'Geldverluste durch Handel oder schlechte Kurse.',
+            termsNotResponsible2: 'Kontosperrungen durch PayPal, Banken usw.',
+            termsNotResponsible3: 'Deals außerhalb offizieller Tickets.',
+            termsNotResponsible4: 'Fehlgeleitete Überweisungen an falsche Adressen.',
+            termsNotResponsible5: 'Verlust des Zugangs zu Konten oder Wallets nach einem Deal.',
+            aboutTitle: 'Über Swaplyy',
+            aboutDesc: 'Dein vertrauenswürdiger Partner für reibungslose Kryptowährungs- und PayPal-Transaktionen. Tritt noch heute unserer Community bei.',
+            aboutFounded: 'Gegründet', aboutTeam: 'Teammitglieder',
+            aboutTeamTitle: 'Leitung',
+            loading: 'Lädt...',
+            footerCopy: '© 2026 Swaplyy. Alle Rechte vorbehalten.'
+        },
+
+        fr: {
+            navHome: 'Accueil', navVouches: 'Avis', navFees: 'Frais',
+            navGuide: 'Guide', navTerms: 'CGU', navAbout: 'À propos',
+            heroTitle: 'Échanges numériques<br><span class="hero-accent">rapides et sécurisés</span>',
+            heroSubtitle: 'Votre partenaire de confiance pour des transactions en cryptomonnaies et PayPal sans friction. Rejoignez notre communauté dès aujourd\'hui.',
+            heroCta: 'Rejoindre Discord',
+            statMembers: 'Membres', statOnline: 'En ligne',
+            statVouches: 'Avis au total', statResponse: 'Temps de réponse',
+            feat1Title: 'Ultra rapide',
+            feat1Desc: 'Traitement instantané et confirmations en temps réel pour toutes vos transactions.',
+            feat2Title: 'Sécurité bancaire',
+            feat2Desc: 'Un chiffrement de niveau militaire protège chacune de vos transactions.',
+            feat4Title: 'Support 24h/24 7j/7',
+            feat4Desc: 'Une assistance disponible à toute heure grâce à notre équipe de support dédiée.',
+            teamTitle: 'Notre équipe', teamDesc: 'Découvrez les personnes derrière Swaplyy',
+            vouchesTitle: 'La confiance de la communauté',
+            vouchesDesc: 'Des retours authentiques de vrais traders. Découvrez ce que nos utilisateurs pensent de Swaplyy.',
+            feesTitle: 'Structure des frais',
+            feesDesc: 'Des frais transparents pour chaque moyen de paiement. Aucun frais caché.',
+            feePaypalNote: 'Amis & Famille',
+            feeCryptoLabel: 'Crypto',
+            feeUsOnly: 'USA uniquement',
+            feeEuGlobal: 'UE / Mondial',
+            feePrepaid: 'Prépayé',
+            feeGiftCard: 'Carte cadeau',
+            feeBankLabel: 'Virement bancaire',
+            feeDeOnly: 'Allemagne uniquement',
+            calcTitle: 'Calculateur de frais',
+            calcDesc: 'Sélectionnez ce que vous envoyez et recevez, entrez le montant — nous calculerons ce que vous obtenez.',
+            calcSendLabel: 'Vous envoyez',
+            calcReceiveLabel: 'Vous recevez',
+            calcAmountLabel: 'Montant que vous envoyez',
+            calcTotalFee: 'Frais totaux',
+            guideTitle: 'Guide de démarrage',
+            guideDesc: 'Suivez ces étapes simples pour commencer à échanger sur Swaplyy en moins de 5 minutes.',
+            step1Title: 'Rejoindre Discord',
+            step1Desc: "Rejoignez notre serveur Discord pour accéder à la communauté Swaplyy et à tous les canaux d'échange.",
+            step2Title: 'Vérification',
+            step2Desc: "Effectuez le processus de vérification sur notre serveur Discord pour débloquer l'accès à toutes les fonctionnalités d'échange.",
+            step3Title: "Créer un ticket d'échange",
+            step3Desc: "Ouvrez un ticket d'échange officiel, indiquez-nous ce que vous souhaitez envoyer et recevoir, et attendez la confirmation d'un membre du staff.",
+            step4Title: 'Profitez-en',
+            step4Desc: 'Profitez d\'échanges rapides et sécurisés avec notre équipe de confiance. Revenez quand vous voulez — nous sommes toujours là pour vous.',
+            termsTitle: 'Conditions générales d\'utilisation',
+            termsDesc: 'Dernière mise à jour : avril 2026. Veuillez lire attentivement ces conditions avant d\'utiliser Swaplyy.',
+            termsCatGeneral: 'Général', termsCatPayment: 'Moyens de paiement',
+            termsCatTransactions: 'Transactions', termsCatLiability: 'Responsabilité',
+            termsSafetyTitle: 'La sécurité avant tout',
+            termsSafetyDesc: 'Votre sécurité est notre priorité absolue. Nous avons des règles strictes pour garantir que les échanges ici sont sûrs et fiables.',
+            termsZeroToleranceTitle: 'Tolérance zéro pour la fraude',
+            termsZeroTol1: "Swaplyy respecte la loi. Nous n'acceptons pas d'argent volé ou de fonds provenant d'activités illégales.",
+            termsZeroTol2: "Si nous pensons que votre argent provient d'une fraude, nous pouvons le geler ou le confisquer.",
+            termsZeroTol3: "S'il s'avère que c'est de l'argent sale, vous ne le reverrez pas.",
+            termsPaypalTitle: 'PayPal',
+            termsPaypal1: "Amis & Famille uniquement — N'envoyez pas en tant que Biens & Services.",
+            termsPaypal2: "N'écrivez rien dans la note de paiement. Vous prenez en charge les frais PayPal.",
+            termsPaypal3: 'Si vous choisissez Solde PayPal, vous devez payer depuis votre solde PayPal.',
+            termsPaypal4: 'Si vous choisissez PayPal Banque/Carte, vous devez payer depuis un compte bancaire ou une carte liés.',
+            termsPaypal5: "Si vous ouvrez un litige ou un remboursement, vous êtes banni.",
+            termsCryptoTitle: 'Cryptomonnaie',
+            termsCrypto1: 'Envoyez à la bonne adresse de portefeuille sur le bon réseau.',
+            termsCrypto2: "Vous payez les frais de réseau. Si vous envoyez à la mauvaise adresse ou au mauvais réseau, cet argent est perdu.",
+            termsBankTitle: 'Virement bancaire',
+            termsBank1: "Envoyez aux coordonnées bancaires fournies par l'échangeur.",
+            termsBank2: "Vous payez les éventuels frais bancaires. N'ajoutez pas de message de paiement sauf si l'échangeur vous le demande.",
+            termsGiftCardsTitle: 'Cartes cadeaux',
+            termsGiftCards1: 'Seuls les codes valides et non utilisés sont acceptés. Le code doit être lisible.',
+            termsGiftCards2: "Si votre code est déjà utilisé, invalide ou seulement partiellement chargé — c'est votre responsabilité. Nous n'acceptons pas les codes d'autres vendeurs.",
+            termsGiftCards3: "Les échangeurs s'enregistrent lors de l'utilisation de votre code comme preuve.",
+            termsExchangeRatesTitle: 'Taux de change',
+            termsExchangeRatesDesc: "Nos taux sont fixes. N'essayez pas de négocier — cela pourrait entraîner un bannissement.",
+            termsDealAmountsTitle: 'Montants des transactions',
+            termsDealAmounts1: 'Vous devez toujours envoyer le montant exact convenu.',
+            termsDealAmountsSubtitle: 'Modifier le montant :',
+            termsDealAmounts3: "Si vous souhaitez envoyer un montant différent, informez-en l'échangeur avant d'envoyer.",
+            termsDealAmounts4: "Attendez que l'échangeur confirme le nouveau montant.",
+            termsDealAmounts5: 'Envoyez uniquement après avoir reçu la confirmation.',
+            termsDealAmountsWrongSubtitle: 'Montants incorrects :',
+            termsDealAmounts7: "Trop envoyé : Seul le montant convenu sera échangé. Ce qu'il advient du surplus dépend de l'échangeur. Pour les tickets : le surplus compte comme un pourboire.",
+            termsDealAmounts8: "Pas assez envoyé : La transaction sera quand même effectuée, mais les frais seront doublés.",
+            termsDealAmounts9: "Si vous envoyez le mauvais montant sans nous en informer au préalable, c'est votre responsabilité.",
+            termsOfficialTicketsTitle: 'Tickets officiels uniquement',
+            termsOfficialTickets1: "Toutes les transactions se font exclusivement via des tickets officiels. Si vous concluez un accord en MP, nous ne pourrons pas vous aider en cas de problème.",
+            termsOfficialTickets2: "Attendez toujours la confirmation du staff avant d'envoyer de l'argent. Nous ne sommes pas responsables des tickets non réclamés ou des paiements non confirmés.",
+            termsAccountIssuesTitle: 'Problèmes de compte',
+            termsAccountIssues1: "Si votre compte est fermé pendant une transaction, vous devez prouver qu'il vous appartenait réellement (par exemple via un enregistrement d'écran).",
+            termsAccountIssues2: "Si le moyen de paiement de l'échangeur est bloqué, vous devrez attendre qu'il soit débloqué avant toute action.",
+            termsNotResponsibleTitle: 'Notre responsabilité ne couvre pas',
+            termsNotResponsible1: "Les pertes d'argent dues aux échanges ou aux mauvais taux.",
+            termsNotResponsible2: 'Le blocage de votre compte par PayPal, les banques, etc.',
+            termsNotResponsible3: 'Les transactions effectuées en dehors des tickets officiels.',
+            termsNotResponsible4: "L'envoi vers une mauvaise adresse.",
+            termsNotResponsible5: "La perte d'accès à vos comptes ou portefeuilles après une transaction.",
+            aboutTitle: 'À propos de Swaplyy',
+            aboutDesc: "Votre partenaire de confiance pour des transactions en cryptomonnaies et PayPal sans friction. Rejoignez notre communauté dès aujourd'hui.",
+            aboutFounded: 'Fondé en', aboutTeam: 'Membres de l\'équipe',
+            aboutTeamTitle: 'Équipe dirigeante',
+            loading: 'Chargement...',
+            footerCopy: '© 2026 Swaplyy. Tous droits réservés.'
+        },
+
+        es: {
+            navHome: 'Inicio', navVouches: 'Opiniones', navFees: 'Tarifas',
+            navGuide: 'Guía', navTerms: 'Términos', navAbout: 'Acerca de',
+            heroTitle: 'Intercambios digitales<br><span class="hero-accent">rápidos y seguros</span>',
+            heroSubtitle: 'Tu socio de confianza para transacciones fluidas de criptomonedas y PayPal. Únete a nuestra comunidad hoy.',
+            heroCta: 'Unirse a Discord',
+            statMembers: 'Miembros', statOnline: 'En línea',
+            statVouches: 'Opiniones totales', statResponse: 'Tiempo de respuesta',
+            feat1Title: 'Ultrarrápido',
+            feat1Desc: 'Procesamiento instantáneo y confirmaciones en tiempo real para todas tus transacciones.',
+            feat2Title: 'Seguridad bancaria',
+            feat2Desc: 'Cifrado de grado militar que protege cada transacción que realizas.',
+            feat4Title: 'Soporte 24/7',
+            feat4Desc: 'Asistencia disponible las 24 horas del día gracias a nuestro dedicado equipo de soporte.',
+            teamTitle: 'Nuestro equipo', teamDesc: 'Conoce a las personas detrás de Swaplyy',
+            vouchesTitle: 'La confianza de la comunidad',
+            vouchesDesc: 'Opiniones reales de traders reales. Descubre lo que nuestros usuarios dicen sobre Swaplyy.',
+            feesTitle: 'Estructura de tarifas',
+            feesDesc: 'Tarifas transparentes para cada método de pago. Sin cargos ocultos.',
+            feePaypalNote: 'Amigos y familia',
+            feeCryptoLabel: 'Cripto',
+            feeUsOnly: 'Solo EE. UU.',
+            feeEuGlobal: 'UE / Global',
+            feePrepaid: 'Prepago',
+            feeGiftCard: 'Tarjeta regalo',
+            feeBankLabel: 'Transferencia bancaria',
+            feeDeOnly: 'Solo Alemania',
+            calcTitle: 'Calculadora de tarifas',
+            calcDesc: 'Selecciona lo que envías y recibes, ingresa el monto — calcularemos lo que obtienes.',
+            calcSendLabel: 'Tú envías',
+            calcReceiveLabel: 'Tú recibes',
+            calcAmountLabel: 'Monto que envías',
+            calcTotalFee: 'Tarifa total',
+            guideTitle: 'Guía de inicio',
+            guideDesc: 'Sigue estos sencillos pasos para comenzar a operar en Swaplyy en menos de 5 minutos.',
+            step1Title: 'Unirse a Discord',
+            step1Desc: 'Únete a nuestro servidor de Discord para acceder a la comunidad de Swaplyy y todos los canales de intercambio.',
+            step2Title: 'Verificación',
+            step2Desc: 'Completa el proceso de verificación en nuestro servidor de Discord para desbloquear el acceso a todas las funciones de intercambio.',
+            step3Title: 'Crear ticket de intercambio',
+            step3Desc: 'Abre un ticket de intercambio oficial, dinos qué quieres enviar y recibir, y espera la confirmación de un miembro del staff.',
+            step4Title: 'Disfruta',
+            step4Desc: 'Disfruta de intercambios rápidos y seguros con nuestro equipo de confianza. Vuelve cuando quieras — siempre estamos aquí para ti.',
+            termsTitle: 'Términos de servicio',
+            termsDesc: 'Última actualización: abril de 2026. Por favor, lee estos términos detenidamente antes de usar Swaplyy.',
+            termsCatGeneral: 'General', termsCatPayment: 'Métodos de pago',
+            termsCatTransactions: 'Transacciones', termsCatLiability: 'Responsabilidad',
+            termsSafetyTitle: 'La seguridad es lo primero',
+            termsSafetyDesc: 'Tu seguridad es nuestra máxima prioridad. Tenemos reglas estrictas para garantizar que operar aquí sea seguro y confiable.',
+            termsZeroToleranceTitle: 'Tolerancia cero al fraude',
+            termsZeroTol1: 'Swaplyy cumple la ley. No aceptamos dinero robado ni fondos de actividades ilegales.',
+            termsZeroTol2: 'Si creemos que tu dinero proviene de fraude, podemos congelarlo o retenerlo.',
+            termsZeroTol3: 'Si resulta ser dinero sucio, no lo volverás a ver.',
+            termsPaypalTitle: 'PayPal',
+            termsPaypal1: 'Solo Amigos y Familia — No envíes como Bienes y Servicios.',
+            termsPaypal2: 'No escribas nada en la nota de pago. Tú pagas las comisiones de PayPal.',
+            termsPaypal3: 'Si eliges Saldo PayPal, debes pagar desde tu saldo de PayPal.',
+            termsPaypal4: 'Si eliges PayPal Banco/Tarjeta, debes pagar desde una cuenta bancaria o tarjeta vinculada.',
+            termsPaypal5: 'Si abres una disputa o contracargo, serás baneado.',
+            termsCryptoTitle: 'Criptomoneda',
+            termsCrypto1: 'Envía a la dirección de monedero correcta en la red correcta.',
+            termsCrypto2: 'Tú pagas las comisiones de red. Si envías a la dirección o red incorrecta, ese dinero se pierde.',
+            termsBankTitle: 'Transferencia bancaria',
+            termsBank1: 'Envía a los datos bancarios que te proporcione el intercambiador.',
+            termsBank2: 'Tú pagas las comisiones bancarias. No añadas un mensaje de pago a menos que el intercambiador te lo indique.',
+            termsGiftCardsTitle: 'Tarjetas regalo',
+            termsGiftCards1: 'Solo se aceptan códigos válidos y no utilizados. El código debe ser legible.',
+            termsGiftCards2: 'Si tu código ya fue usado, es inválido o solo está cargado parcialmente — es tu responsabilidad. No aceptamos códigos de otros vendedores.',
+            termsGiftCards3: 'Los intercambiadores se graban usando tu código como prueba.',
+            termsExchangeRatesTitle: 'Tipos de cambio',
+            termsExchangeRatesDesc: 'Nuestras tarifas son fijas. No intentes negociar — podría resultar en un baneo.',
+            termsDealAmountsTitle: 'Importes del trato',
+            termsDealAmounts1: 'Siempre debes enviar el importe exacto acordado.',
+            termsDealAmountsSubtitle: 'Cambiar el importe:',
+            termsDealAmounts3: 'Si deseas enviar un importe diferente, informa al intercambiador antes de enviar.',
+            termsDealAmounts4: 'Espera a que el intercambiador confirme el nuevo importe.',
+            termsDealAmounts5: 'Envía solo después de recibir la confirmación.',
+            termsDealAmountsWrongSubtitle: 'Importes incorrectos:',
+            termsDealAmounts7: 'Enviaste de más: Solo se cambiará el importe acordado. Lo que pase con el exceso depende del intercambiador. En tickets: el exceso cuenta como propina.',
+            termsDealAmounts8: 'Enviaste de menos: El trato se realizará igualmente, pero las tarifas se duplicarán.',
+            termsDealAmounts9: 'Si envías el importe incorrecto sin avisarnos, es tu responsabilidad.',
+            termsOfficialTicketsTitle: 'Solo tickets oficiales',
+            termsOfficialTickets1: 'Todos los tratos ocurren exclusivamente en tickets oficiales. Si realizas un trato por DM, no podemos ayudarte si algo sale mal.',
+            termsOfficialTickets2: 'Siempre espera la confirmación del staff antes de enviar dinero. No somos responsables de tickets no reclamados ni de pagos que no confirmamos.',
+            termsAccountIssuesTitle: 'Problemas de cuenta',
+            termsAccountIssues1: 'Si tu cuenta es cerrada durante un trato, debes demostrar que realmente era tuya (por ejemplo, con una grabación de pantalla).',
+            termsAccountIssues2: 'Si el método de pago del intercambiador es bloqueado, deberás esperar hasta que se desbloquee antes de que pueda ocurrir cualquier cosa.',
+            termsNotResponsibleTitle: 'No es nuestra responsabilidad',
+            termsNotResponsible1: 'El dinero que pierdas por operar o por malos tipos de cambio.',
+            termsNotResponsible2: 'El bloqueo de tu cuenta por PayPal, bancos, etc.',
+            termsNotResponsible3: 'Tratos realizados fuera de tickets oficiales.',
+            termsNotResponsible4: 'Que envíes a la dirección incorrecta.',
+            termsNotResponsible5: 'Perder el acceso a tus cuentas o monederos tras un trato.',
+            aboutTitle: 'Acerca de Swaplyy',
+            aboutDesc: 'Tu socio de confianza para transacciones fluidas de criptomonedas y PayPal. Únete a nuestra comunidad hoy.',
+            aboutFounded: 'Fundado', aboutTeam: 'Miembros del equipo',
+            aboutTeamTitle: 'Equipo directivo',
+            loading: 'Cargando...',
+            footerCopy: '© 2026 Swaplyy. Todos los derechos reservados.'
+        },
+
+        ru: {
+            navHome: 'Главная', navVouches: 'Отзывы', navFees: 'Тарифы',
+            navGuide: 'Руководство', navTerms: 'Условия', navAbout: 'О нас',
+            heroTitle: 'Быстрые, безопасные<br><span class="hero-accent">цифровые обмены</span>',
+            heroSubtitle: 'Ваш надёжный партнёр для беспроблемных транзакций с криптовалютой и PayPal. Присоединяйтесь к нашему сообществу уже сегодня.',
+            heroCta: 'Присоединиться в Discord',
+            statMembers: 'Участников', statOnline: 'Онлайн',
+            statVouches: 'Всего отзывов', statResponse: 'Время ответа',
+            feat1Title: 'Молниеносная скорость',
+            feat1Desc: 'Мгновенная обработка и подтверждения в реальном времени для всех ваших транзакций.',
+            feat2Title: 'Банковский уровень защиты',
+            feat2Desc: 'Шифрование военного уровня защищает каждую вашу транзакцию.',
+            feat4Title: 'Поддержка 24/7',
+            feat4Desc: 'Круглосуточная помощь от нашей преданной команды поддержки.',
+            teamTitle: 'Наша команда', teamDesc: 'Познакомьтесь с людьми, стоящими за Swaplyy',
+            vouchesTitle: 'Доверие сообщества',
+            vouchesDesc: 'Реальные отзывы от реальных трейдеров. Узнайте, что наши пользователи говорят о Swaplyy.',
+            feesTitle: 'Структура тарифов',
+            feesDesc: 'Прозрачные тарифы для каждого способа оплаты. Никаких скрытых платежей.',
+            feePaypalNote: 'Друзьям и семье',
+            feeCryptoLabel: 'Крипто',
+            feeUsOnly: 'Только США',
+            feeEuGlobal: 'ЕС / Весь мир',
+            feePrepaid: 'Предоплаченный',
+            feeGiftCard: 'Подарочная карта',
+            feeBankLabel: 'Банковский перевод',
+            feeDeOnly: 'Только Германия',
+            calcTitle: 'Калькулятор комиссий',
+            calcDesc: 'Выберите, что вы отправляете и получаете, введите сумму — мы рассчитаем, что вы получите.',
+            calcSendLabel: 'Вы отправляете',
+            calcReceiveLabel: 'Вы получаете',
+            calcAmountLabel: 'Сумма отправки',
+            calcTotalFee: 'Итоговая комиссия',
+            guideTitle: 'Руководство для начинающих',
+            guideDesc: 'Следуйте этим простым шагам, чтобы начать торговлю на Swaplyy менее чем за 5 минут.',
+            step1Title: 'Вступить в Discord',
+            step1Desc: 'Присоединяйтесь к нашему серверу Discord, чтобы получить доступ к сообществу Swaplyy и всем обменным каналам.',
+            step2Title: 'Верификация',
+            step2Desc: 'Пройдите верификацию на нашем сервере Discord, чтобы открыть доступ ко всем функциям обмена.',
+            step3Title: 'Создать тикет обмена',
+            step3Desc: 'Откройте официальный тикет обмена, укажите, что вы хотите отправить и получить, и дождитесь подтверждения от сотрудника.',
+            step4Title: 'Получайте удовольствие',
+            step4Desc: 'Наслаждайтесь быстрыми и безопасными обменами с нашей надёжной командой. Возвращайтесь в любое время — мы всегда здесь для вас.',
+            termsTitle: 'Условия обслуживания',
+            termsDesc: 'Последнее обновление: апрель 2026 г. Пожалуйста, внимательно прочитайте эти условия перед использованием Swaplyy.',
+            termsCatGeneral: 'Общие положения', termsCatPayment: 'Способы оплаты',
+            termsCatTransactions: 'Транзакции', termsCatLiability: 'Ответственность',
+            termsSafetyTitle: 'Безопасность прежде всего',
+            termsSafetyDesc: 'Ваша безопасность — наш главный приоритет. У нас есть строгие правила, обеспечивающие надёжность торговли.',
+            termsZeroToleranceTitle: 'Нулевая терпимость к мошенничеству',
+            termsZeroTol1: 'Swaplyy соблюдает закон. Мы не принимаем краденые деньги или средства из незаконной деятельности.',
+            termsZeroTol2: 'Если мы подозреваем, что ваши средства получены мошенническим путём, мы можем их заморозить или изъять.',
+            termsZeroTol3: 'Если окажется, что это «грязные» деньги, вы их больше не увидите.',
+            termsPaypalTitle: 'PayPal',
+            termsPaypal1: 'Только «Друзьям и семье» — не отправляйте как «Товары и услуги».',
+            termsPaypal2: 'Не пишите ничего в примечании к платежу. Комиссии PayPal оплачиваете вы.',
+            termsPaypal3: 'Если выбран PayPal Баланс, оплата должна производиться с баланса PayPal.',
+            termsPaypal4: 'Если выбран PayPal Банк/Карта, оплата должна производиться с привязанного банковского счёта или карты.',
+            termsPaypal5: 'Если вы откроете спор или запросите чарджбэк, вы будете заблокированы.',
+            termsCryptoTitle: 'Криптовалюта',
+            termsCrypto1: 'Отправляйте на правильный адрес кошелька в правильной сети.',
+            termsCrypto2: 'Сетевые комиссии оплачиваете вы. Если вы отправите на неверный адрес или в неверную сеть, деньги будут потеряны.',
+            termsBankTitle: 'Банковский перевод',
+            termsBank1: 'Отправляйте на банковские реквизиты, предоставленные обменником.',
+            termsBank2: 'Банковские комиссии оплачиваете вы. Не добавляйте примечание к платежу, если обменник не просил об этом.',
+            termsGiftCardsTitle: 'Подарочные карты',
+            termsGiftCards1: 'Принимаются только действительные и неиспользованные коды. Код должен хорошо читаться.',
+            termsGiftCards2: 'Если ваш код уже использован, недействителен или загружен лишь частично — это ваша ответственность. Мы не принимаем коды от других продавцов.',
+            termsGiftCards3: 'Обменники записывают себя при использовании вашего кода в качестве подтверждения.',
+            termsExchangeRatesTitle: 'Обменные курсы',
+            termsExchangeRatesDesc: 'Наши курсы фиксированы. Не пытайтесь торговаться — это может привести к блокировке.',
+            termsDealAmountsTitle: 'Суммы сделок',
+            termsDealAmounts1: 'Вы всегда должны отправлять точно оговорённую сумму.',
+            termsDealAmountsSubtitle: 'Изменение суммы:',
+            termsDealAmounts3: 'Если вы хотите отправить другую сумму, сообщите об этом обменнику до отправки.',
+            termsDealAmounts4: 'Дождитесь подтверждения новой суммы от обменника.',
+            termsDealAmounts5: 'Отправляйте только после получения подтверждения.',
+            termsDealAmountsWrongSubtitle: 'Неверные суммы:',
+            termsDealAmounts7: 'Отправлено слишком много: будет обменяна только оговорённая сумма. Судьба излишка зависит от обменника. В тикетах: излишек считается чаевыми.',
+            termsDealAmounts8: 'Отправлено слишком мало: сделка всё равно будет проведена, но комиссии удвоятся.',
+            termsDealAmounts9: 'Если вы отправите неверную сумму без предупреждения — это ваша ответственность.',
+            termsOfficialTicketsTitle: 'Только официальные тикеты',
+            termsOfficialTickets1: 'Все сделки совершаются исключительно в официальных тикетах. Если вы заключите сделку в личных сообщениях, мы не сможем помочь в случае проблем.',
+            termsOfficialTickets2: 'Всегда ожидайте подтверждения от сотрудников перед отправкой денег. Мы не несём ответственности за невостребованные тикеты или неподтверждённые платежи.',
+            termsAccountIssuesTitle: 'Проблемы с аккаунтом',
+            termsAccountIssues1: 'Если ваш аккаунт был закрыт во время сделки, вам нужно доказать, что он действительно принадлежал вам (например, записью экрана).',
+            termsAccountIssues2: 'Если способ оплаты обменника заблокирован, вам придётся подождать его разблокировки.',
+            termsNotResponsibleTitle: 'Мы не несём ответственности за',
+            termsNotResponsible1: 'Потерю денег из-за торговли или невыгодных курсов.',
+            termsNotResponsible2: 'Блокировку вашего аккаунта в PayPal, банках и т. д.',
+            termsNotResponsible3: 'Сделки, совершённые за пределами официальных тикетов.',
+            termsNotResponsible4: 'Отправку на неверный адрес.',
+            termsNotResponsible5: 'Потерю доступа к вашим аккаунтам или кошелькам после сделки.',
+            aboutTitle: 'О Swaplyy',
+            aboutDesc: 'Ваш надёжный партнёр для беспроблемных транзакций с криптовалютой и PayPal. Присоединяйтесь к нашему сообществу уже сегодня.',
+            aboutFounded: 'Основана', aboutTeam: 'Членов команды',
+            aboutTeamTitle: 'Руководящая команда',
+            loading: 'Загрузка...',
+            footerCopy: '© 2026 Swaplyy. Все права защищены.'
+        }
+    };
+
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon   = document.getElementById('themeIcon');
+    const html        = document.documentElement;
+    function setTheme(theme) {
+        if (theme === 'dark') { html.classList.add('dark'); themeIcon.setAttribute('icon', 'lucide:sun'); }
+        else { html.classList.remove('dark'); themeIcon.setAttribute('icon', 'lucide:moon'); }
+        localStorage.setItem('Swaplyy-theme', theme);
+    }
+    setTheme(localStorage.getItem('Swaplyy-theme') || 'light');
+    themeToggle.addEventListener('click', () => setTheme(html.classList.contains('dark') ? 'light' : 'dark'));
+
+    const langBtn      = document.getElementById('langBtn');
+    const langDropdown = document.getElementById('langDropdown');
+    const langOptions  = document.querySelectorAll('.lang-option');
+    function setLanguage(lang) {
+        localStorage.setItem('Swaplyy-lang', lang);
+        html.setAttribute('lang', lang);
+        langOptions.forEach(opt => opt.classList.toggle('active', opt.dataset.lang === lang));
+        const t = translations[lang] || translations['en'];
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const k = el.getAttribute('data-i18n');
+            if (t[k] !== undefined) el.innerHTML = t[k];
+        });
+    }
+    setLanguage(localStorage.getItem('Swaplyy-lang') || 'en');
+    langBtn.addEventListener('click', e => { e.stopPropagation(); langDropdown.classList.toggle('open'); });
+    langOptions.forEach(opt => opt.addEventListener('click', () => { setLanguage(opt.dataset.lang); langDropdown.classList.remove('open'); }));
+    document.addEventListener('click', () => langDropdown.classList.remove('open'));
+
+    const allTabs  = document.querySelectorAll('.nav-tab');
+    const allPages = document.querySelectorAll('.page-section');
+    let teamLoaded = false, vouchesLoaded = false;
+
+    function switchPage(pageName) {
+        allTabs.forEach(t => t.classList.toggle('active', t.dataset.page === pageName));
+        allPages.forEach(s => s.classList.toggle('active', s.id === `page-${pageName}`));
+        document.getElementById('mobileMenu').classList.remove('open');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (pageName === 'home'    && !teamLoaded)    loadTeam();
+        if (pageName === 'vouches' && !vouchesLoaded) loadVouches();
+    }
+    allTabs.forEach(tab => tab.addEventListener('click', () => switchPage(tab.dataset.page)));
+    document.getElementById('mobileToggle').addEventListener('click', () => document.getElementById('mobileMenu').classList.toggle('open'));
+
+    const CATEGORY_META = {
+        founder:       { label: 'Founder',      icon: 'lucide:crown' },
+        owner:         { label: 'Owner',         icon: 'lucide:star' },
+        administrator: { label: 'Administrator', icon: 'lucide:shield' },
+        head:          { label: 'Head',          icon: 'lucide:users' },
+        moderator:     { label: 'Moderator',     icon: 'lucide:shield-check' },
+        exchanger:     { label: 'Exchanger',     icon: 'lucide:arrow-left-right' }
+    };
+    const STATUS_COLORS = { online: '#22c55e', idle: '#f59e0b', dnd: '#ef4444', offline: '#6b7280' };
+
+    const FEE_MAP = {
+        paypal_low:  { label: 'PayPal',          fee: 0.05  },
+        paypal_high: { label: 'PayPal',          fee: 0.20  },
+        crypto_low:  { label: 'Crypto',          fee: 0.00  },
+        crypto_high: { label: 'Crypto',          fee: 0.03  },
+        cashapp:     { label: 'CashApp',         fee: 0.10  },
+        revolut:     { label: 'Revolut',         fee: 0.10  },
+        venmo:       { label: 'Venmo',           fee: 0.10  },
+        zelle:       { label: 'Zelle',           fee: 0.10  },
+        skrill:      { label: 'Skrill',          fee: 0.10  },
+        paysafe:     { label: 'Paysafe',         fee: 0.20  },
+        amazon:      { label: 'Amazon GC',       fee: 0.35  },
+        applepay:    { label: 'Apple Pay',       fee: 0.25  },
+        bank:        { label: 'Bank Transfer',   fee: 0.10  },
+        wunsch:      { label: 'Wunschgutschein', fee: 0.45  }
+    };
+
+    function calcUpdate() {
+        const sendKey    = document.getElementById('calc-send').value;
+        const receiveKey = document.getElementById('calc-receive').value;
+        const amount     = parseFloat(document.getElementById('calc-amount').value);
+        const result     = document.getElementById('calc-result');
+        if (!amount || amount <= 0) { result.style.display = 'none'; return; }
+        const sendFee    = FEE_MAP[sendKey].fee;
+        const receiveFee = FEE_MAP[receiveKey].fee;
+        const totalFee   = sendFee + receiveFee;
+        const received   = amount * (1 - totalFee);
+        document.getElementById('res-send').textContent    = '$' + amount.toFixed(2);
+        document.getElementById('res-fee').textContent     = '-$' + (amount * totalFee).toFixed(2) + ' (' + (totalFee * 100).toFixed(0) + '%)';
+        document.getElementById('res-receive').textContent = '$' + received.toFixed(2);
+        const breakdown = [];
+        if (sendFee > 0)      breakdown.push(`${FEE_MAP[sendKey].label} send fee: ${(sendFee*100).toFixed(0)}% = -$${(amount * sendFee).toFixed(2)}`);
+        if (sendFee === 0)    breakdown.push(`${FEE_MAP[sendKey].label} send fee: 0% (free)`);
+        if (receiveFee > 0)   breakdown.push(`${FEE_MAP[receiveKey].label} receive fee: ${(receiveFee*100).toFixed(0)}% = -$${(amount * receiveFee).toFixed(2)}`);
+        if (receiveFee === 0) breakdown.push(`${FEE_MAP[receiveKey].label} receive fee: 0% (free)`);
+        document.getElementById('res-breakdown').innerHTML = breakdown.join('<br>');
+        result.style.display = 'block';
+    }
+
+    function buildTeamMemberCard(m) {
+        const initials    = (m.displayName || m.username || '??').slice(0, 2).toUpperCase();
+        const statusColor = STATUS_COLORS[m.status] || STATUS_COLORS.offline;
+        const roleLabel   = m.subLabel || '';
+        return `
+            <div class="team-member-card">
+                <div class="team-member-avatar-wrap">
+                    <img src="${m.avatar}" alt="${m.displayName}" class="team-member-avatar-img"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                    <div class="team-member-avatar-fallback" style="display:none;">${initials}</div>
+                    <span class="team-member-status" style="background:${statusColor};"></span>
+                </div>
+                <div class="team-member-name">${m.displayName || m.username}</div>
+                ${roleLabel ? `<div class="team-member-role">${roleLabel}</div>` : ''}
+            </div>`;
+    }
+
+    function renderTeam(categories) {
+        const container = document.getElementById('discordTeamContainer');
+        const nonEmpty  = categories.filter(cat => cat.members.length > 0);
+        if (!nonEmpty.length) {
+            container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--fg-muted)">No team members found.</div>';
+            return;
+        }
+        container.innerHTML = nonEmpty.map(cat => {
+            const meta = CATEGORY_META[cat.key] || { label: cat.label, icon: 'lucide:users' };
+            return `
+                <div class="team-category">
+                    <div class="team-category-header">
+                        <div class="team-category-icon"><iconify-icon icon="${meta.icon}"></iconify-icon></div>
+                        <span class="team-category-label">${meta.label}</span>
+                        <span class="team-category-count">${cat.members.length}</span>
+                    </div>
+                    <div class="team-grid">${cat.members.map(buildTeamMemberCard).join('')}</div>
+                </div>`;
+        }).join('');
+        const total = categories.reduce((sum, cat) => sum + cat.members.length, 0);
+        const countEl = document.getElementById('about-team-count');
+        if (countEl) countEl.textContent = total;
+        const leadershipGrid = document.getElementById('aboutLeadershipGrid');
+        if (leadershipGrid) {
+            const leaderCats = categories.filter(cat => cat.key === 'founder' || cat.key === 'owner');
+            const leaders = leaderCats.flatMap(cat => cat.members);
+            if (leaders.length === 0) {
+                leadershipGrid.innerHTML = '<div style="text-align:center;padding:40px;color:var(--fg-muted);grid-column:1/-1;">No founders or owners found.</div>';
+            } else {
+                leadershipGrid.innerHTML = leaders.map(m => {
+                    const initials = (m.displayName || m.username || '??').slice(0, 2).toUpperCase();
+                    const catLabel = m.category === 'founder' ? 'Founder' : 'Owner';
+                    return `
+                        <div class="card" style="display:flex; flex-direction:column; align-items:center; text-align:center; padding:28px 20px;">
+                            <div style="position:relative; margin-bottom:14px;">
+                                <img src="${m.avatar}" alt="${m.displayName}" style="width:64px; height:64px; border-radius:16px; object-fit:cover; border:2px solid var(--border); display:block;"
+                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                                <div style="display:none; width:64px; height:64px; border-radius:16px; background:var(--tab-active-bg); color:var(--accent); align-items:center; justify-content:center; font-size:22px; font-weight:700; border:2px solid var(--border);">${initials}</div>
+                                <span style="position:absolute; bottom:2px; right:2px; width:13px; height:13px; border-radius:50%; border:2px solid var(--card-bg); background:${STATUS_COLORS[m.status] || STATUS_COLORS.offline};"></span>
+                            </div>
+                            <div style="font-size:15px; font-weight:700; color:var(--fg);">${m.displayName || m.username}</div>
+                            <div style="font-size:12px; color:var(--accent); font-weight:600; margin-top:3px;">${catLabel}</div>
+                        </div>`;
+                }).join('');
+            }
+        }
+    }
+
+    async function loadTeam() {
+        const container = document.getElementById('discordTeamContainer');
+        try {
+            const res = await fetch('/api/team');
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const data = await res.json();
+            renderTeam(data.categories || []);
+            teamLoaded = true;
+        } catch (err) {
+            container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--fg-muted)">Loading team... <span style="font-size:11px;">(${err.message})</span></div>`;
+            setTimeout(loadTeam, 3000);
+        }
+    }
+
+    function buildVouchCard(v) {
+        const clientName  = v.clientDisplayName || v.clientId || 'Unknown';
+        const initials    = clientName.slice(0, 2).toUpperCase();
+        const date        = new Date(v.createdAt).toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' });
+        const avatarUrl   = v.clientAvatar || null;
+        const avatarHtml  = avatarUrl
+            ? `<img src="${avatarUrl}" alt="${clientName}" class="vouch-avatar-img"
+                   onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+               <div class="vouch-avatar-fallback" style="display:none;">${initials}</div>`
+            : `<div class="vouch-avatar-fallback">${initials}</div>`;
+        return `
+            <div class="card">
+                <div class="vouch-card">
+                    <div class="vouch-avatar-wrap">${avatarHtml}</div>
+                    <div style="flex:1; min-width:0;">
+                        <div class="vouch-name">${clientName}</div>
+                        <div class="vouch-date">${date} · via <strong>${v.exchangerUsername || 'Unknown'}</strong></div>
+                        <div class="vouch-stars">★★★★★</div>
+                        <div class="vouch-pair">
+                            <strong>${v.fromCurrency}</strong>
+                            <iconify-icon icon="lucide:arrow-right" style="font-size:11px;"></iconify-icon>
+                            <strong>${v.toCurrency}</strong>
+                            &nbsp;·&nbsp;${v.amount} ${v.currency}
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+    }
+
+    async function loadVouches() {
+        const container = document.getElementById('vouchesContainer');
+        try {
+            const res = await fetch('/api/vouches');
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const data = await res.json();
+            if (!data.success || !data.vouches.length) {
+                container.innerHTML = '<div class="card" style="text-align:center;padding:40px;color:var(--fg-muted)">No vouches yet.</div>';
+                vouchesLoaded = true;
+                return;
+            }
+            container.innerHTML = data.vouches.map(buildVouchCard).join('');
+            vouchesLoaded = true;
+        } catch (err) {
+            container.innerHTML = `<div class="card" style="text-align:center;padding:40px;color:var(--fg-muted)">Loading vouches... <span style="font-size:11px;">(${err.message})</span></div>`;
+            setTimeout(loadVouches, 3000);
+        }
+    }
+
+    loadTeam();
+    loadVouches();
+    loadDiscordStats();
+
+    async function loadDiscordStats() {
+        try {
+            const res = await fetch('/api/stats');
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const data = await res.json();
+            const members = data.memberCount ?? data.members ?? null;
+            const online  = data.onlineCount ?? data.online ?? null;
+            const vouches = data.vouchCount  ?? data.vouches ?? null;
+            if (members !== null) document.getElementById('stat-members').textContent = members.toLocaleString();
+            if (online  !== null) document.getElementById('stat-online').textContent  = online.toLocaleString();
+            if (vouches !== null) document.getElementById('stat-vouches').textContent = vouches.toLocaleString();
+        } catch (err) {
+            try {
+                const vRes  = await fetch('/api/vouches');
+                const vData = await vRes.json();
+                if (vData.success && vData.vouches) {
+                    document.getElementById('stat-vouches').textContent = vData.vouches.length.toLocaleString() + '+';
+                }
+            } catch (_) {}
+            setTimeout(loadDiscordStats, 5000);
+        }
+    }
+
+    try {
+        const ws = new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}`);
+        ws.onmessage = (e) => {
+            const msg = JSON.parse(e.data);
+            if (msg.type === 'team_update' && msg.categories) { renderTeam(msg.categories); teamLoaded = true; }
+            if (msg.type === 'stats_update') {
+                if (msg.memberCount != null) document.getElementById('stat-members').textContent = msg.memberCount.toLocaleString();
+                if (msg.onlineCount  != null) document.getElementById('stat-online').textContent  = msg.onlineCount.toLocaleString();
+                if (msg.vouchCount   != null) document.getElementById('stat-vouches').textContent = msg.vouchCount.toLocaleString();
+            }
+        };
+    } catch(e) {}
+    </script>
+</body>
+</html>
