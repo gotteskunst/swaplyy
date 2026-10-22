@@ -2,7 +2,7 @@
 
 Exchange website with live Discord integration.
 
-![preview](https://ibb.co/Kj1rq4B8)
+![preview]([https://ibb.co/Kj1rq4B8](https://i.ibb.co/tMdJsjn1/grafik.png))
 
 ## Structure
 
